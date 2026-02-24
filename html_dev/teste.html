@@ -4,8 +4,22 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>teste</title>
+        <style>
+            input{
+                height: 50px;
+                width: 50px;
+            }
+        </style>
     </head>
     <body>
-        <input type="button" value="bah">
+        <input id="numero" class="butao" type="button" onclick="num()" value="bah">
+        
+        <script>
+            n = 0
+            function num(){
+                document.getElementById('numero').value=n
+                n += 1
+            }
+        </script>
     </body>
 </html>
