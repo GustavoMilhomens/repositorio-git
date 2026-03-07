@@ -7,3 +7,4 @@ class Jogador():
 
 jogador = Jogador(input('informe o nome do jogador: '), input('informe a raça: '), input('informe a classe: '))
 print(f"nome: {jogador.nome}\nraça: {jogador.raca}\nclasse: {jogador.classe}")
+ 
