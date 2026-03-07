@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Requisitos - Chatbot WhatsApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A dashboard-style SPA was chosen to transform the static list of requirements into an interactive tool. The structure includes: 1) A header with the project title. 2) Key metric cards (total RF, RNF, Dificuldades) for a quick overview, which also act as quick filters. 3) A main content area with filter buttons and a search bar for granular exploration. 4) A visual summary (donut chart) to show the composition of requirements. 5) A grid of cards to display individual requirements. This structure enhances usability by providing multiple ways to access and digest the information (overview, filtering, searching), making it much more efficient to explore than a linear document. -->
+    <!-- Visualization & Content Choices: Report Info: Lists of functional requirements, non-functional requirements, and difficulties. -> Goal: Organize, Inform, Compare. -> Viz/Presentation Method: An interactive grid of cards for requirements, and a donut chart for composition. -> Interaction: Users can filter the card grid by clicking on the metric cards or the main filter buttons (Todos, Funcionais, Não Funcionais, Dificuldades). A search bar provides real-time filtering of the displayed cards. Hovering on the chart reveals tooltips with counts. -> Justification: The card layout neatly encapsulates each requirement. Filters and search are essential for navigating specification documents. The donut chart provides an instant visual summary of the project's scope, comparing feature requirements vs. quality constraints. -> Library/Method: Chart.js for the canvas-based donut chart, Vanilla JS for all DOM manipulation and interaction logic. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #3f3f46;
+        }
+        .metric-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .filter-btn.active {
+            background-color: #4f46e5;
+            color: white;
+            font-weight: 600;
+        }
+        .req-card {
+            border-left-width: 4px;
+            transition: border-color 0.3s;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-indigo-700">Painel de Requisitos do Projeto</h1>
+            <p class="mt-2 text-lg text-gray-600">Análise Interativa do Chatbot para WhatsApp</p>
+        </header>
+
+        <main>
+            <section id="overview" class="mb-10">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div id="card-funcional" class="metric-card cursor-pointer p-6 bg-white rounded-xl shadow-md border border-gray-200 flex flex-col items-center text-center">
+                        <span class="text-4xl font-bold text-emerald-600" id="count-funcional">0</span>
+                        <h3 class="mt-2 text-lg font-semibold text-gray-700">Requisitos Funcionais</h3>
+                        <p class="text-sm text-gray-500">Funcionalidades do sistema.</p>
+                    </div>
+                    <div id="card-nao-funcional" class="metric-card cursor-pointer p-6 bg-white rounded-xl shadow-md border border-gray-200 flex flex-col items-center text-center">
+                        <span class="text-4xl font-bold text-sky-600" id="count-nao-funcional">0</span>
+                        <h3 class="mt-2 text-lg font-semibold text-gray-700">Requisitos Não Funcionais</h3>
+                        <p class="text-sm text-gray-500">Qualidade e restrições.</p>
+                    </div>
+                    <div id="card-dificuldades" class="metric-card cursor-pointer p-6 bg-white rounded-xl shadow-md border border-gray-200 flex flex-col items-center text-center">
+                        <span class="text-4xl font-bold text-amber-600" id="count-dificuldades">0</span>
+                        <h3 class="mt-2 text-lg font-semibold text-gray-700">Dificuldades e Riscos</h3>
+                        <p class="text-sm text-gray-500">Pontos de atenção.</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-xl shadow-md border border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-700 text-center mb-2">Composição do Projeto</h3>
+                        <div class="chart-container">
+                            <canvas id="requirementsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="explorer">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Explore os Requisitos</h2>
+                        <p class="text-gray-600 mt-1">Utilize os filtros e a busca para encontrar requisitos específicos. Esta seção detalha todas as especificações funcionais, não funcionais e os desafios identificados para o desenvolvimento do chatbot.</p>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-4 mb-6">
+                        <div class="flex-1">
+                            <input type="text" id="searchInput" placeholder="🔎 Buscar por palavra-chave..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                        </div>
+                        <nav class="flex items-center space-x-2 bg-gray-100 p-1 rounded-lg">
+                            <button data-filter="all" class="filter-btn active w-full md:w-auto px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 transition">Todos</button>
+                            <button data-filter="funcional" class="filter-btn w-full md:w-auto px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 transition">Funcionais</button>
+                            <button data-filter="nao-funcional" class="filter-btn w-full md:w-auto px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 transition">Não Funcionais</button>
+                            <button data-filter="dificuldades" class="filter-btn w-full md:w-auto px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 transition">Dificuldades</button>
+                        </nav>
+                    </div>
+
+                    <div id="requirements-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <p id="no-results" class="text-gray-500 hidden col-span-full text-center py-8">Nenhum requisito encontrado.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const requirementsData = [
+                { id: 'RF01', type: 'funcional', title: 'Histórico de Mensagens', description: 'O sistema deve permitir que estudantes consultem o histórico de mensagens anteriores.' },
+                { id: 'RF02', type: 'funcional', title: 'Diferenciação de Usuários', description: 'O chatbot deve autenticar e diferenciar usuários entre estudantes e professores, oferecendo funcionalidades específicas para cada perfil.' },
+                { id: 'RF03', type: 'funcional', title: 'Envio de Mensagens em Massa', description: 'O sistema deve possibilitar o envio de mensagens em massa para uma ou mais turmas ou grupos pré-definidos.' },
+                { id: 'RF04', type: 'funcional', title: 'Autorização de Envio', description: 'O envio de mensagens por professores deve ser autorizado por um mecanismo de senha ou confirmação.' },
+                { id: 'RF05', type: 'funcional', title: 'Agrupamento de Notificações', description: 'O sistema deve agrupar notificações semelhantes com base em palavras-chave para evitar o envio de múltiplas mensagens sobre o mesmo tema.' },
+                { id: 'RF06', type: 'funcional', title: 'Uso de IA para Respostas', description: 'O chatbot deve utilizar inteligência artificial para otimizar e personalizar respostas a perguntas frequentes.' },
+                { id: 'RF07', type: 'funcional', title: 'Estrutura das Mensagens', description: 'Todas as respostas do sistema devem ser bem estruturadas e redigidas em português.' },
+                { id: 'RF08', type: 'funcional', title: 'Envio de Mídias', description: 'O sistema deve permitir o envio de mídias (fotos, vídeos, documentos) junto com as mensagens de texto.' },
+                { id: 'RF09', type: 'funcional', title: 'Encaminhamento de Usuários', description: 'O chatbot deve encaminhar o usuário a um servidor ou responsável por um determinado setor, se solicitado.' },
+                { id: 'RF10', type: 'funcional', title: 'Agendamento de Mensagens', description: 'O sistema deve permitir o agendamento de mensagens para envio futuro em datas e horários pré-definidos.' },
+                { id: 'RF11', type: 'funcional', title: 'Avisos Automáticos de Eventos', description: 'O sistema deve enviar avisos automáticos sobre eventos escolares (reuniões, festas, etc.) previamente cadastrados.' },
+                { id: 'RF12', type: 'funcional', title: 'Integração com Banco de Dados', description: 'O sistema deve integrar-se com o banco de dados da instituição para a adição automática dos contatos dos membros.' },
+                { id: 'RF13', type: 'funcional', title: 'Controle de Horário', description: 'O sistema deve impedir o envio de contatos de responsáveis fora dos horários permitidos.' },
+                { id: 'RF14', type: 'funcional', title: 'Segmentação de Usuários', description: 'O sistema deve permitir a segmentação de usuários, como a divisão de alunos por série, para facilitar envios direcionados.' },
+                { id: 'RF15', type: 'funcional', title: 'Categorização Visual', description: 'O chatbot deve permitir a categorização de mensagens por meio de identificadores visuais, como emojis.' },
+                { id: 'RNF01', type: 'nao-funcional', title: 'Tempo de Resposta', description: 'O chatbot deve responder às mensagens do usuário em até 2 segundos.' },
+                { id: 'RNF02', type: 'nao-funcional', title: 'Compatibilidade', description: 'A solução deve ser compatível com qualquer dispositivo móvel que possua o aplicativo WhatsApp instalado.' },
+                { id: 'RNF03', type: 'nao-funcional', title: 'Disponibilidade', description: 'O sistema deve garantir uma disponibilidade mínima de 99% do tempo.' },
+                { id: 'RNF04', type: 'nao-funcional', title: 'Usabilidade', description: 'A interface do chatbot deve ser simples, intuitiva e acessível, não exigindo treinamento prévio.' },
+                { id: 'RNF05', type: 'nao-funcional', title: 'Controle de Spam', description: 'O sistema deve possuir um mecanismo de controle para evitar o envio massivo de mensagens que possa ser interpretado como spam.' },
+                { id: 'D01', type: 'dificuldades', title: 'Necessidade de Banco de Dados', description: 'A implementação exigirá uma base de dados robusta para armazenar e gerenciar as informações de todos os usuários.' },
+                { id: 'D02', type: 'dificuldades', title: 'Domínio e Número Telefônico', description: 'O funcionamento do bot depende da aquisição de um número telefônico dedicado.' },
+                { id: 'D03', type: 'dificuldades', title: 'Limitação de Mensagens', description: 'A API do WhatsApp possui limites de envio que, se excedidos, podem levar ao bloqueio do número do sistema.' },
+                { id: 'D04', type: 'dificuldades', title: 'Risco de Spam', description: 'O envio de mensagens para mais de 50 pessoas de uma vez pode ser detectado como spam, resultando em penalidades.' }
+            ];
+
+            const grid = document.getElementById('requirements-grid');
+            const searchInput = document.getElementById('searchInput');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const noResults = document.getElementById('no-results');
+
+            const typeStyles = {
+                'funcional': {
+                    borderColor: 'border-emerald-500',
+                    bgColor: 'bg-emerald-50',
+                    textColor: 'text-emerald-800',
+                    tagBg: 'bg-emerald-100',
+                    tagText: 'text-emerald-700'
+                },
+                'nao-funcional': {
+                    borderColor: 'border-sky-500',
+                    bgColor: 'bg-sky-50',
+                    textColor: 'text-sky-800',
+                    tagBg: 'bg-sky-100',
+                    tagText: 'text-sky-700'
+                },
+                'dificuldades': {
+                    borderColor: 'border-amber-500',
+                    bgColor: 'bg-amber-50',
+                    textColor: 'text-amber-800',
+                    tagBg: 'bg-amber-100',
+                    tagText: 'text-amber-700'
+                }
+            };
+            
+            let currentFilter = 'all';
+            let searchTerm = '';
+
+            const renderRequirements = () => {
+                grid.innerHTML = '';
+                const filteredData = requirementsData.filter(req => {
+                    const matchesFilter = currentFilter === 'all' || req.type === currentFilter;
+                    const matchesSearch = searchTerm === '' || req.title.toLowerCase().includes(searchTerm) || req.description.toLowerCase().includes(searchTerm);
+                    return matchesFilter && matchesSearch;
+                });
+
+                if (filteredData.length === 0) {
+                    noResults.classList.remove('hidden');
+                } else {
+                    noResults.classList.add('hidden');
+                }
+
+                filteredData.forEach(req => {
+                    const styles = typeStyles[req.type];
+                    const card = document.createElement('div');
+                    card.className = `req-card ${styles.borderColor} ${styles.bgColor} p-5 rounded-lg shadow-sm`;
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="font-mono text-sm ${styles.textColor} font-semibold">${req.id}</span>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${styles.tagBg} ${styles.tagText}">${req.type.replace('-', ' ')}</span>
+                        </div>
+                        <h4 class="font-bold text-lg ${styles.textColor} mb-2">${req.title}</h4>
+                        <p class="text-sm text-gray-600">${req.description}</p>
+                    `;
+                    grid.appendChild(card);
+                });
+            };
+
+            const updateCounts = () => {
+                const funcionalCount = requirementsData.filter(r => r.type === 'funcional').length;
+                const naoFuncionalCount = requirementsData.filter(r => r.type === 'nao-funcional').length;
+                const dificuldadesCount = requirementsData.filter(r => r.type === 'dificuldades').length;
+
+                document.getElementById('count-funcional').textContent = funcionalCount;
+                document.getElementById('count-nao-funcional').textContent = naoFuncionalCount;
+                document.getElementById('count-dificuldades').textContent = dificuldadesCount;
+
+                return { funcionalCount, naoFuncionalCount, dificuldadesCount };
+            };
+            
+            const createChart = (counts) => {
+                const ctx = document.getElementById('requirementsChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Funcionais', 'Não Funcionais', 'Dificuldades'],
+                        datasets: [{
+                            data: [counts.funcionalCount, counts.naoFuncionalCount, counts.dificuldadesCount],
+                            backgroundColor: ['#10b981', '#0ea5e9', '#f59e0b'],
+                            borderColor: '#FDFBF8',
+                            borderWidth: 4,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '70%',
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    boxWidth: 12,
+                                    padding: 15,
+                                    font: {
+                                        family: "'Inter', sans-serif"
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                bodyFont: {
+                                    family: "'Inter', sans-serif",
+                                    weight: 'bold'
+                                },
+                                titleFont: {
+                                    family: "'Inter', sans-serif"
+                                },
+                                callbacks: {
+                                    label: function(context) {
+                                        return ` ${context.label}: ${context.raw}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            };
+
+            const handleFilterClick = (filter) => {
+                currentFilter = filter;
+                filterBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.filter === currentFilter);
+                });
+                renderRequirements();
+            };
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => handleFilterClick(btn.dataset.filter));
+            });
+            
+            searchInput.addEventListener('input', e => {
+                searchTerm = e.target.value.toLowerCase();
+                renderRequirements();
+            });
+
+            document.getElementById('card-funcional').addEventListener('click', () => handleFilterClick('funcional'));
+            document.getElementById('card-nao-funcional').addEventListener('click', () => handleFilterClick('nao-funcional'));
+            document.getElementById('card-dificuldades').addEventListener('click', () => handleFilterClick('dificuldades'));
+
+            const counts = updateCounts();
+            createChart(counts);
+            renderRequirements();
+        });
+    </script>
+</body>
+</html>
