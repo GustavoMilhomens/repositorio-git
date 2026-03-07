@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administre Seu Dinheiro - Educação Financeira Aprimorada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #4CAF50; 
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #4CAF50;
+        }
+        .container {
+            width: 90%; 
+            max-width: 1000px; 
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+            gap: 30px; 
+            border-radius: 10px;
+        }
+        .section {
+            width: 100%; 
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px; 
+            box-sizing: border-box; 
+        }
+        #educacao-financeira {
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+        /* Estilo para termos de ensino */
+        #educacao-financeira dt {
+            font-weight: bold;
+            color: #007BFF; /* Azul para destaque dos termos */
+            margin-top: 10px;
+        }
+        #educacao-financeira dd {
+            margin-left: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #eee;
+        }
+        #simulacao-bancaria {
+            background-color: #e8f5e9; 
+            border: 2px solid #4CAF50; 
+            display: flex; 
+            flex-direction: column;
+            margin-top: 20px; 
+        }
+        .section h2 {
+            color: #4CAF50;
+            border-bottom: 2px solid #4CAF50; 
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        /* Sub-seções da Simulação */
+        .simulacao-painel {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        #painel-transacao {
+            flex: 2; 
+            padding-right: 20px;
+            border-right: 1px solid #ccc;
+        }
+        #painel-metas {
+            flex: 1; 
+        }
+
+        /* Estilo do formulário (mantido) */
+        #form-transacao label, #form-meta label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #form-transacao input, #form-transacao select, #form-transacao button, 
+        #form-meta input, #form-meta button, #btn-fim-mes {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #form-transacao button, #form-meta button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        #form-transacao button:hover, #form-meta button:hover {
+            background-color: #45a049;
+        }
+        #btn-fim-mes {
+            background-color: #007BFF; 
+            color: white;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        /* Estilo do Extrato e Metas (mantido) */
+        #extrato ul {
+            list-style: none;
+            padding: 0;
+        }
+        #extrato li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #ccc;
+            display: flex;
+            justify-content: space-between;
+        }
+        .valor-deposito { color: green; font-weight: bold; }
+        .valor-saque { color: red; font-weight: bold; }
+
+        /* Indicador de Meta (mantido) */
+        #status-meta {
+            padding: 10px;
+            border: 1px solid #f90;
+            background-color: #fff3e0;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        .progresso-bar {
+            background-color: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .progresso-fill {
+            height: 15px;
+            background-color: #FFA726; 
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .rendimento {
+            color: #007BFF; 
+            font-weight: bold;
+        }
+
+        /* Ajuste para telas menores: empilhar painéis de simulação */
+        @media (max-width: 768px) {
+            .simulacao-painel {
+                flex-direction: column;
+            }
+            #painel-transacao {
+                border-right: none;
+                padding-right: 0;
+                border-bottom: 1px solid #ccc;
+                padding-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Administre Seu Dinheiro</h1>
+        <p>Aprenda a cuidar das suas finanças, do básico ao avançado.</p>
+    </header>
+
+    <nav>
+        <a href="#educacao-financeira">Estudo e Conceitos</a>
+        <a href="#simulacao-bancaria">Simulação Prática</a>
+    </nav>
+
+    <div class="container">
+
+        <section id="educacao-financeira" class="section">
+            <h2>📚 Educação Financeira - Conceitos Fundamentais</h2>
+            
+            <h3>Para Crianças e Iniciantes:</h3>
+            <p><strong>O que é Dinheiro?</strong> Aprenda de onde ele vem e para que serve (troca, poupança e gasto).</p>
+            <ul>
+                <li>O Conceito de "Querer" vs. "Precisar"</li>
+                <li>Como funciona o Cofrinho e a Poupança</li>
+                <li>Tarefas e Mesada: O seu primeiro salário</li>
+            </ul>
+
+            <h3>Para Jovens e Adultos:</h3>
+            <p><strong>Planejamento e Investimentos.</strong> Entenda como o dinheiro pode trabalhar para você.</p>
+            <ol>
+                <li>Como Fazer um Orçamento Pessoal (Planilha)</li>
+                <li>O Poder dos Juros Compostos (Cálculo)</li>
+                <li>Introdução a Investimentos (Renda Fixa, Ações, Tesouro)</li>
+                <li>Como Sair das Dívidas e Evitar Juros Altos</li>
+            </ol>
+
+            <h3>Taxas, Juros e Rendimento em Renda Fixa:</h3>
+            <p>Entender a linguagem do mercado é crucial para fazer seu dinheiro crescer. Veja os termos mais comuns:</p>
+            <dl>
+                <dt>Juros e Juros Compostos:</dt>
+                <dd>Juros é o valor cobrado pelo uso do dinheiro. **Juros Simples** incidem apenas sobre o valor inicial. **Juros Compostos** (os "juros sobre juros") incidem sobre o valor atualizado (capital + juros anteriores), sendo a chave para o crescimento do seu investimento (ou da sua dívida!).</dd>
+
+                <dt>Rendimento e Rentabilidade:</dt>
+                <dd>É o lucro que seu investimento gera. No nosso simulador, o rendimento é o valor que o seu saldo adiciona a cada mês, calculado com base na taxa de juros simulada.</dd>
+
+                <dt>Taxa (ou Indexador):</dt>
+                <dd>É o índice usado para calcular seu rendimento. No Brasil, os mais comuns são a **Taxa Selic** (taxa básica de juros da economia) e o **CDI**.</dd>
+
+                <dt>CDI (Certificado de Depósito Interbancário):</dt>
+                <dd>É a taxa que os bancos cobram ao emprestar dinheiro entre si. Na prática, serve como o principal *benchmark* (referência) para a Renda Fixa. Quando um investimento paga **100% do CDI**, significa que ele renderá o equivalente a essa taxa.</dd>
+
+                <dt>Renda Fixa:</dt>
+                <dd>Investimentos onde você sabe ou consegue estimar a regra de remuneração (juros) no momento da aplicação. É o caso da Poupança, CDBs, LCI, LCA e Tesouro Direto. Eles são o ponto de partida ideal para quem está começando.</dd>
+            </dl>
+            <p><em>(Aqui entrarão links para artigos, vídeos e infográficos educativos.)</em></p>
+        </section>
+
+        <section id="simulacao-bancaria" class="section">
+            <h2>💰 Simulação Prática - Seu Banco Virtual</h2>
+            <p>Use este espaço para simular transações, orçamentos e investimentos sem riscos.</p>
+            
+            <h3>Seu Saldo Atual: <span id="saldo" style="font-size: 1.5em; color: #4CAF50;">R$ 0,00</span></h3>
+            
+            <div class="simulacao-painel">
+                
+                <div id="painel-transacao">
+                    <form id="form-transacao">
+                        <h4>Realizar Transação:</h4>
+                        <label for="tipo">Tipo:</label>
+                        <select id="tipo" name="tipo">
+                            <option value="deposito">Depósito/Receita (+)</option>
+                            <option value="saque">Saque/Despesa (-)</option>
+                        </select>
+                        
+                        <label for="valor">Valor (R$):</label>
+                        <input type="number" id="valor" name="valor" min="0.01" step="0.01" required>
+                        
+                        <label for="descricao">Descrição:</label>
+                        <input type="text" id="descricao" name="descricao" required>
+                        
+                        <button type="submit">Confirmar Transação</button>
+                    </form>
+                    
+                    <button id="btn-fim-mes">⏩ Simular Fim do Mês (Aplicar Juros!)</button>
+
+                </div>
+
+                <div id="painel-metas">
+                    <h4>🎯 Minha Meta de Poupança</h4>
+                    <form id="form-meta">
+                        <label for="meta-nome">Nome da Meta:</label>
+                        <input type="text" id="meta-nome" value="Viagem dos Sonhos" required>
+                        
+                        <label for="meta-valor">Valor Alvo (R$):</label>
+                        <input type="number" id="meta-valor" min="1" step="1" value="5000" required>
+                        
+                        <button type="button" onclick="salvarMeta()">Definir/Atualizar Meta</button>
+                    </form>
+
+                    <div id="status-meta">
+                        <p>Meta: <span id="meta-nome-display">Viagem dos Sonhos</span></p>
+                        <p>Alvo: <span id="meta-valor-display">R$ 5.000,00</span></p>
+                        <p>Atingido: <span id="meta-atingido-display">R$ 0,00</span></p>
+                        <div class="progresso-bar"><div class="progresso-fill" id="progresso-fill"></div></div>
+                        <small id="meta-progresso-texto">0%</small>
+                    </div>
+                </div>
+            </div>
+
+            <div id="extrato">
+                <h4>Últimas Movimentações (Extrato):</h4>
+                <ul id="lista-extrato">
+                    <p>Nenhuma transação ainda...</p>
+                </ul>
+            </div>
+            
+        </section>
+
+    </div>
+
+    <footer>
+        <p>
+            © 2025 - Projeto de Educação Financeira. Comece a aprender hoje!
+        </p>
+    </footer>
+
+    <script>
+        // -----------------------------------------------------------
+        // Variáveis de Estado (Para Simulação)
+        // -----------------------------------------------------------
+        let saldoAtual = 1000.00; 
+        let extratoMovimentacoes = [];
+        
+        // Simulação: A taxa de 0.5% ao mês é um exemplo de rendimento (como 100% do CDI)
+        const TAXA_JUROS_MENSAL = 0.5; 
+
+        let meta = {
+            nome: "Viagem dos Sonhos",
+            valorAlvo: 5000.00,
+            valorAtingido: 0.00
+        };
+
+        // -----------------------------------------------------------
+        // Elementos do DOM
+        // -----------------------------------------------------------
+        const saldoElement = document.getElementById('saldo');
+        const formTransacao = document.getElementById('form-transacao');
+        const listaExtrato = document.getElementById('lista-extrato');
+        const btnFimMes = document.getElementById('btn-fim-mes');
+
+        const metaNomeDisplay = document.getElementById('meta-nome-display');
+        const metaValorDisplay = document.getElementById('meta-valor-display');
+        const metaAtingidoDisplay = document.getElementById('meta-atingido-display');
+        const progressoFill = document.getElementById('progresso-fill');
+        const metaProgressoTexto = document.getElementById('meta-progresso-texto');
+
+        // -----------------------------------------------------------
+        // Funções de Controle de UI
+        // -----------------------------------------------------------
+
+        function formatarMoeda(valor) {
+            return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function adicionarMovimentacao(tipo, valor, descricao, classeAdicional = '') {
+            extratoMovimentacoes.push({
+                tipo: tipo,
+                valor: valor,
+                descricao: descricao,
+                data: new Date().toLocaleDateString('pt-BR')
+            });
+            atualizarSaldoUI();
+            renderizarExtrato();
+        }
+
+        function atualizarSaldoUI() {
+            saldoElement.textContent = formatarMoeda(saldoAtual);
+            saldoElement.style.color = saldoAtual < 0 ? 'red' : '#4CAF50';
+            
+            meta.valorAtingido = Math.max(0, saldoAtual); 
+            renderizarMeta();
+        }
+
+        function renderizarExtrato() {
+            listaExtrato.innerHTML = ''; 
+
+            if (extratoMovimentacoes.length === 0) {
+                listaExtrato.innerHTML = '<p>Nenhuma transação ainda...</p>';
+                return;
+            }
+
+            const ultimasMovimentacoes = extratoMovimentacoes.slice(-15).reverse();
+
+            ultimasMovimentacoes.forEach(movimento => {
+                const li = document.createElement('li');
+                const valorFormatado = formatarMoeda(movimento.valor);
+                const classeValor = movimento.tipo === 'deposito' ? 'valor-deposito' : 'valor-saque';
+                const prefixo = movimento.tipo === 'deposito' ? '+' : '-';
+                const data = movimento.data ? `(${movimento.data})` : '';
+
+                li.innerHTML = `
+                    <span>${movimento.descricao} ${data}</span>
+                    <span class="${classeValor}">${prefixo} ${valorFormatado}</span>
+                `;
+                listaExtrato.appendChild(li);
+            });
+        }
+
+        // -----------------------------------------------------------
+        // Funções de Metas
+        // -----------------------------------------------------------
+
+        function salvarMeta() {
+            const nome = document.getElementById('meta-nome').value.trim();
+            const valorAlvo = parseFloat(document.getElementById('meta-valor').value);
+
+            if (nome === '' || isNaN(valorAlvo) || valorAlvo <= 0) {
+                alert('Por favor, defina um nome e um valor alvo válido para sua meta.');
+                return;
+            }
+
+            meta.nome = nome;
+            meta.valorAlvo = valorAlvo;
+            alert(`Meta atualizada para: ${nome} (Alvo: ${formatarMoeda(valorAlvo)})`);
+            renderizarMeta();
+        }
+
+        function renderizarMeta() {
+            const progressoPorcentagem = Math.min(100, (meta.valorAtingido / meta.valorAlvo) * 100);
+
+            metaNomeDisplay.textContent = meta.nome;
+            metaValorDisplay.textContent = formatarMoeda(meta.valorAlvo);
+            metaAtingidoDisplay.textContent = formatarMoeda(meta.valorAtingido);
+            progressoFill.style.width = progressoPorcentagem + '%';
+            metaProgressoTexto.textContent = `${progressoPorcentagem.toFixed(1)}% atingido`;
+
+            if (progressoPorcentagem >= 100) {
+                 metaProgressoTexto.textContent += ' - PARABÉNS! META CONCLUÍDA!';
+                 progressoFill.style.backgroundColor = '#4CAF50'; 
+            } else {
+                 progressoFill.style.backgroundColor = '#FFA726'; 
+            }
+        }
+
+        // -----------------------------------------------------------
+        // Funções de Simulação (Ação do Mês)
+        // -----------------------------------------------------------
+
+        function simularFimDoMes() {
+            if (saldoAtual <= 0) {
+                alert('Seu saldo está em zero ou negativo. Não há rendimento de juros. Planeje melhor o próximo ciclo!');
+                return;
+            }
+            
+            const rendimento = saldoAtual * (TAXA_JUROS_MENSAL / 100);
+            
+            saldoAtual += rendimento;
+
+            adicionarMovimentacao(
+                'deposito', 
+                rendimento, 
+                `Rendimento de Juros (Taxa: ${TAXA_JUROS_MENSAL}%)`
+            );
+
+            alert(`Mês concluído! Você ganhou ${formatarMoeda(rendimento)} em rendimentos. Seu novo saldo é ${formatarMoeda(saldoAtual)}.`);
+        }
+
+
+        // -----------------------------------------------------------
+        // Event Listeners e Inicialização
+        // -----------------------------------------------------------
+        
+        function lidarComTransacao(event) {
+            event.preventDefault(); 
+
+            const tipo = document.getElementById('tipo').value;
+            const valorInput = document.getElementById('valor').value;
+            const descricao = document.getElementById('descricao').value.trim();
+
+            const valor = parseFloat(valorInput);
+
+            if (isNaN(valor) || valor <= 0 || descricao === '') {
+                alert('Por favor, insira um valor e uma descrição válidos.');
+                return;
+            }
+
+            if (tipo === 'saque' && saldoAtual - valor < 0) {
+                alert('Atenção: Esta transação levará seu saldo a ficar negativo (DÍVIDA!). Prossiga com cuidado se for essencial.');
+            }
+            
+            if (tipo === 'deposito') {
+                saldoAtual += valor;
+            } else if (tipo === 'saque') {
+                saldoAtual -= valor;
+            }
+
+            adicionarMovimentacao(tipo, valor, descricao);
+            formTransacao.reset();
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            adicionarMovimentacao('deposito', 1000.00, 'Depósito Inicial de Simulação');
+            
+            formTransacao.addEventListener('submit', lidarComTransacao);
+            btnFimMes.addEventListener('click', simularFimDoMes);
+
+            atualizarSaldoUI();
+            renderizarExtrato();
+            renderizarMeta();
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+    <head>
+        <title>site de estudo html</title>
+        <script>
+            function mudar_fundo(){
+                document.getElementById("body1").style.backgroundColor = "blue";
+            }
+            function fundo(){
+                document.getElementsByTagName('body1').backgroundColor = "fundo_escuro"
+            }
+        </script>
+        <style>
+            .fundo_escuro{
+                background-color:black;
+                color: rgb(225, 225, 225);}
+            .fundo_branco{
+                background-color: rgb(225, 225, 225) ;
+                color: rgb(40, 40, 40)}
+
+        </style>
+    </head>
+
+    <body id="body1" class="mudar_fundo">
+        <h2>Titulo</h2>
+
+        <p>paragrafo</p>
+
+        <button type="button"
+            onclick="document.getElementById('body1').style.backgroundColor = 'black';
+            document.getElementById('body1').style.color = 'white'; " >
+        Click Me!</button>
+        <input type="checkbox" id="fundo" name="fundo" value="Bike">
+    </body>
+
+</html>

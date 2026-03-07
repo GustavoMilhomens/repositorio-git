@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administre Seu Dinheiro - Educação Financeira Aprimorada</title>
+    <style>
+        /* Estilos Globais e Reset Simples */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8; /* Cor de fundo mais clara */
+            color: #333;
+        }
+        
+        /* Header & Navegação */
+        header {
+            background-color: #4CAF50; /* Verde Principal */
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        nav {
+            background-color: #333;
+            padding: 12px;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: 600;
+            transition: color 0.3s;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        nav a:hover {
+            color: #4CAF50;
+            background-color: #555;
+        }
+
+        /* Layout Principal */
+        .container {
+            width: 90%; 
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+        }
+        .section {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px; 
+            box-sizing: border-box; 
+        }
+        .section h2 {
+            color: #4CAF50;
+            border-bottom: 2px solid #a8e6a8;
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.8em;
+        }
+
+        /* Estilos de Conteúdo - Educação */
+        #educacao-financeira {
+            border: 1px solid #e0e0e0;
+        }
+        #educacao-financeira h3 {
+            color: #1a73e8; /* Cor de destaque para subtítulos */
+            border-left: 5px solid #1a73e8;
+            padding-left: 10px;
+            margin-top: 25px;
+        }
+        #educacao-financeira dt {
+            font-weight: bold;
+            color: #008080; /* Cor para termos-chave */
+            margin-top: 12px;
+        }
+        #educacao-financeira dd {
+            margin-left: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #f0f0f0;
+        }
+
+        /* Estilos de Conteúdo - Simulação */
+        #simulacao-bancaria {
+            background-color: #f7fcf8;
+            border: 2px solid #4CAF50; 
+        }
+        .simulacao-info {
+            background-color: #fff3e0;
+            border: 1px solid #ff9800;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .saldo-display {
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            text-align: center;
+            border: 1px solid #4CAF50;
+        }
+        .saldo-display span {
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .simulacao-painel {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        #painel-transacao {
+            flex: 2; 
+            padding-right: 30px;
+            border-right: 1px solid #ddd;
+        }
+        #painel-metas {
+            flex: 1;  
+        }
+        
+        /* Formulários e Inputs */
+        input, select {
+            border: 1px solid #ccc;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        #form-transacao button, #form-meta button, #form-recorrente button {
+            padding: 10px;
+            margin-top: 15px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        #form-transacao button:hover, #form-meta button:hover, #form-recorrente button:hover {
+            background-color: #45a049;
+        }
+        #btn-fim-mes {
+            background-color: #1a73e8; /* Azul para ação de "Avançar Mês" */
+            width: 100%;
+            margin-top: 25px;
+        }
+        #btn-fim-mes:hover {
+            background-color: #0d65d9;
+        }
+
+        #btn-simular-meses {
+            background-color: #008080; /* Cor para simulação em lote */
+            width: 100%;
+            margin-top: 10px !important;
+        }
+        #btn-simular-meses:hover {
+            background-color: #006666;
+        }
+
+        /* Extrato e Recorrentes */
+        #extrato, #contas-recorrentes {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        #extrato li, #lista-recorrentes li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex; /* Adicionado para alinhar valor à direita */
+            justify-content: space-between;
+            align-items: center;
+        }
+        .valor-deposito { color: #28a745; font-weight: bold;}
+        .valor-saque { color: #dc3545; font-weight: bold;}
+        .rendimento { color: #1a73e8; font-weight: bold; }
+
+        /* Estilos da barra de progresso (metas) */
+        .progresso-bar {
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            overflow: hidden;
+            height: 15px;
+            margin: 10px 0;
+        }
+        .progresso-fill {
+            height: 100%;
+            background-color: #FFA726;
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #333;
+            color: #ccc;
+            margin-top: 40px;
+            font-size: 0.9em;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .simulacao-painel {
+                flex-direction: column;
+            }
+            #painel-transacao {
+                border-right: none;
+                padding-right: 0;
+                border-bottom: 1px solid #ddd;
+                padding-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Administre Seu Dinheiro</h1>
+        <p>Aprenda a cuidar das suas finanças, do básico ao avançado.</p>
+    </header>
+
+    <nav>
+        <a href="#educacao-financeira">Estudo e Conceitos</a>
+        <a href="#simulacao-bancaria">Simulação Prática</a>
+    </nav>
+
+    <div class="container">
+
+        <section id="educacao-financeira" class="section">
+            <h2>📚 Educação Financeira - Conceitos Fundamentais</h2>
+            
+            <h3>Princípios de Orçamento Inteligente</h3>
+            <dl>
+                <dt>Regra 50/30/20:</dt>
+                <dd>Um método popular para dividir sua renda: **50% para Necessidades** (aluguel, comida, contas essenciais); **30% para Desejos** (lazer, restaurantes); e **20% para Investimentos e Dívidas** (poupança, metas, cartão de crédito).</dd>
+
+                <dt>Fundo de Emergência:</dt>
+                <dd>Reserva de dinheiro guardada em um lugar seguro (como a Poupança, no nosso simulador) para cobrir imprevistos (saúde, perda de emprego). O ideal é ter o suficiente para cobrir **3 a 6 meses** do seu custo de vida.</dd>
+
+                <dt>Dívida Má ou Boa:</dt>
+                <dd>**Má Dívida** (como cartão de crédito e cheque especial) tem juros altíssimos e deve ser evitada. **Boa Dívida** (como financiamento estudantil ou hipoteca) é aquela que gera valor ou permite você adquirir bens necessários a juros baixos.</dd>
+            </dl>
+            
+            <h3>Contas e Juros</h3>
+            <dl>
+                <dt>Conta Corrente:</dt>
+                <dd>Ideal para o dia a dia (pagamentos, saques, transferências). **Geralmente não rende juros** e pode ter tarifas.</dd>
+
+                <dt>Conta Poupança (Simulada):</dt>
+                <dd>Conta de investimento de baixo risco para guardar dinheiro a médio/longo prazo. **Rende juros (0.5% a.m.)** mensalmente. Use esta conta para seu Fundo de Emergência e Metas.</dd>
+
+                <dt>Juros Compostos:</dt>
+                <dd>Os "juros sobre juros". Incidem sobre o valor atualizado (capital + juros anteriores), chave para o crescimento do seu investimento.</dd>
+            </dl>
+
+            <h3>Videoaulas Recomendadas:</h3>
+            <ul>
+                <li><a href="https://www.youtube.com/watch?v=QbIyKUEdv9A" target="_blank" rel="noopener noreferrer">Curso Grátis de Educação Financeira | Aula 1: Introdução</a> (Realizzare Cursos)</li>
+                <li><a href="https://www.youtube.com/watch?v=CB5zuxQl5ro" target="_blank" rel="noopener noreferrer">O Que É Educação Financeira? Como Usar o Dinheiro?</a> (Finanças e Negócios)</li>
+            </ul>
+        </section>
+
+        <section id="simulacao-bancaria" class="section">
+            <h2>💰 Simulação Prática - Seu Banco Virtual</h2>
+            
+            <div class="simulacao-info">
+                <h4>Instruções da Simulação:</h4>
+                <ol>
+                    <li>**COMECE ZERADO:** Faça sua primeira transação usando o "Depósito/Receita (+)" para simular sua primeira renda.</li>
+                    <li>**Corrente (Dia a Dia):** Use para despesas e receitas imediatas. **Pode ficar negativa** (simulando cheque especial).</li>
+                    <li>**Poupança (Investimento/Metas):** Use para metas e emergências. **Rende juros (0.5% a.m.)** ao final de cada mês.</li>
+                    <li>**Transferências:** Use o menu Tipo para mover fundos entre as contas manualmente.</li>
+                    <li>**Fim do Mês:** Clique para aplicar juros e lançar todos os itens e transferências recorrentes.</li>
+                </ol>
+            </div>
+
+            <div class="saldo-display">
+                <p>
+                    Corrente: <span id="saldo-corrente" style="color: #555;">R$ 0,00</span> | 
+                    Poupança: <span id="saldo-poupanca" style="color: #FFA726;">R$ 0,00</span>
+                </p>
+                <h3>Saldo Total: <span id="saldo-total" style="font-size: 1.2em; color: #4CAF50;">R$ 0,00</span></h3>
+            </div>
+            
+            <div class="simulacao-painel">
+                
+                <div id="painel-transacao">
+                    <form id="form-transacao">
+                        <h4>Realizar Transação Manual:</h4>
+
+                        <div id="conta-select-group">
+                            <label for="conta">Conta (Origem/Destino):</label>
+                            <select id="conta" name="conta" style="width: 100%; margin-top: 5px;">
+                                <option value="corrente">Conta Corrente (Dia a Dia)</option>
+                                <option value="poupanca">Conta Poupança (Investimento)</option>
+                            </select>
+                        </div>
+
+                        <label for="tipo">Tipo:</label>
+                        <select id="tipo" name="tipo" style="width: 100%; margin-top: 5px;">
+                            <option value="deposito">Depósito/Receita (+)</option>
+                            <option value="saque">Saque/Despesa (-)</option>
+                            <option value="transferir_para_poupanca">Transferir: Corrente p/ Poupança (C -> P)</option>
+                            <option value="transferir_para_corrente">Transferir: Poupança p/ Corrente (P -> C)</option>
+                        </select>
+                        
+                        <label for="valor">Valor (R$):</label>
+                        <input type="number" id="valor" name="valor" min="0.01" step="0.01" required style="width: 100%; margin-top: 5px;">
+                        
+                        <label for="descricao">Descrição:</label>
+                        <input type="text" id="descricao" name="descricao" required style="width: 100%; margin-top: 5px;">
+                        
+                        <button type="submit">Confirmar Transação</button>
+                    </form>
+                    
+                    <button id="btn-fim-mes">⏩ Simular Fim do Mês (Aplicar Rendimento + Recorrentes!)</button>
+
+                    <div style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 15px;">
+                        <form id="form-simulacao-meses">
+                            <h4>Simular Múltiplos Meses:</h4>
+                            <label for="num-meses">Quantidade de Meses (Máx. 60):</label>
+                            <input type="number" id="num-meses" min="1" max="60" value="5" required style="width: 100%; margin-top: 5px;">
+                            <button type="submit" id="btn-simular-meses">Simular Período</button>
+                        </form>
+                    </div>
+
+                </div>
+
+                <div id="painel-metas">
+                    <h4>🎯 Minha Meta de Poupança</h4>
+                    <form id="form-meta">
+                        <label for="meta-nome">Nome da Meta:</label>
+                        <input type="text" id="meta-nome" value="" placeholder="Ex: Viagem, Carro, Emergência..." required style="width: 100%; margin-top: 5px;">
+                        
+                        <label for="meta-valor">Valor Alvo (R$):</label>
+                        <input type="number" id="meta-valor" min="1" step="1" value="" placeholder="Ex: 5000" required style="width: 100%; margin-top: 5px;">
+                        
+                        <button type="button" onclick="salvarMeta()">Definir/Atualizar Meta</button>
+                    </form>
+
+                    <div id="status-meta" style="margin-top: 20px; padding: 15px; border: 1px solid #ff9800; background-color: #fffaf2; border-radius: 8px;">
+                        <p>Meta: <span id="meta-nome-display">Não Definida</span></p>
+                        <p>Alvo: <span id="meta-valor-display">R$ 0,00</span></p>
+                        <p>Atingido: <span id="meta-atingido-display">R$ 0,00</span></p>
+                        <div class="progresso-bar"><div class="progresso-fill" id="progresso-fill"></div></div>
+                        <small id="meta-progresso-texto">0%</small>
+                    </div>
+                </div>
+            </div>
+
+            <div id="contas-recorrentes">
+                <h4>🗓️ Receitas e Contas Recorrentes (Agenda Mensal)</h4>
+                <form id="form-recorrente">
+                    <label for="recorrente-tipo">Tipo:</label>
+                    <select id="recorrente-tipo" name="recorrente-tipo" style="width: 100%; margin-top: 5px;">
+                        <option value="salario">Salário/Receita Fixa (+)</option>
+                        <option value="conta">Conta/Despesa Fixa (-)</option>
+                        <option value="transferencia">Transferência Corrente → Poupança (Economia Mensal)</option>
+                    </select>
+
+                    <label for="recorrente-valor">Valor (R$):</label>
+                    <input type="number" id="recorrente-valor" min="0.01" step="0.01" required style="width: 100%; margin-top: 5px;">
+
+                    <label for="recorrente-descricao">Descrição:</label>
+                    <input type="text" id="recorrente-descricao" required style="width: 100%; margin-top: 5px;">
+
+                    <div id="recorrente-conta-group">
+                        <label for="recorrente-conta">Conta de Destino/Origem:</label>
+                        <select id="recorrente-conta" name="recorrente-conta" style="width: 100%; margin-top: 5px;">
+                            <option value="corrente">Conta Corrente</option>
+                            <option value="poupanca">Conta Poupança</option>
+                        </select>
+                    </div>
+
+                    <button type="submit">Adicionar Recorrente</button>
+                </form>
+
+                <h4 style="margin-top: 20px;">Itens Recorrentes Cadastrados:</h4>
+                <ul id="lista-recorrentes">
+                    </ul>
+            </div>
+
+            <div id="extrato">
+                <h4>Últimas Movimentações (Extrato):</h4>
+                <button id="btn-limpar-extrato" style="background-color: #f44336; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; margin-bottom: 10px;">
+                    Limpar Extrato
+                </button>
+                <ul id="lista-extrato">
+                    <p>Nenhuma transação ainda...</p>
+                </ul>
+            </div>
+            
+        </section>
+
+    </div>
+
+    <footer>
+        <p>
+            © 2025 - Projeto de Educação Financeira. Simulação apenas para fins educacionais.
+        </p>
+    </footer>
+
+    <script>
+        // -----------------------------------------------------------
+        // Variáveis de Estado (ZERADAS)
+        // -----------------------------------------------------------
+        let saldoCorrente = 0.00;   // ZERADO
+        let saldoPoupanca = 0.00;     // ZERADO
+        let extratoMovimentacoes = []; // VAZIO
+        const TAXA_JUROS_MENSAL = 0.5; // 0.5% a.m.
+
+        let meta = {
+            nome: "Não Definida",
+            valorAlvo: 0.00, // ZERADO
+            valorAtingido: 0.00
+        };
+
+        let recorrentes = [
+            { tipo: 'salario', valor: 2500.00, descricao: 'Salário Mensal', conta: 'corrente' },
+            { tipo: 'conta', valor: 800.00, descricao: 'Aluguel', conta: 'corrente' },
+            { tipo: 'transferencia', valor: 300.00, descricao: 'Caixinha 50/30/20 (20%)', conta: 'transfer' }
+        ];
+
+        // -----------------------------------------------------------
+        // Elementos do DOM
+        // -----------------------------------------------------------
+        const saldoTotalElement = document.getElementById('saldo-total');
+        const saldoCorrenteElement = document.getElementById('saldo-corrente');
+        const saldoPoupancaElement = document.getElementById('saldo-poupanca');
+        const formTransacao = document.getElementById('form-transacao');
+        const formRecorrente = document.getElementById('form-recorrente');
+        const listaExtrato = document.getElementById('lista-extrato');
+        const listaRecorrentes = document.getElementById('lista-recorrentes');
+        const btnFimMes = document.getElementById('btn-fim-mes');
+        const contaSelectGroup = document.getElementById('conta-select-group');
+        const tipoSelect = document.getElementById('tipo');
+        const formSimulacaoMeses = document.getElementById('form-simulacao-meses'); // NOVO
+
+        const metaNomeDisplay = document.getElementById('meta-nome-display');
+        const metaValorDisplay = document.getElementById('meta-valor-display');
+        const metaAtingidoDisplay = document.getElementById('meta-atingido-display');
+        const progressoFill = document.getElementById('progresso-fill');
+        const metaProgressoTexto = document.getElementById('meta-progresso-texto');
+        
+        const recorrenteTipoSelect = document.getElementById('recorrente-tipo');
+        const recorrenteContaGroup = document.getElementById('recorrente-conta-group');
+        const btnLimparExtrato = document.getElementById('btn-limpar-extrato');
+
+        // -----------------------------------------------------------
+        // Funções de Utilidade
+        // -----------------------------------------------------------
+
+        function formatarMoeda(valor) {
+            return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function limparExtrato() {
+            if (confirm("ATENÇÃO: Deseja realmente zerar o simulador? Todos os saldos serão definidos para R$ 0,00 e o extrato será limpo. A meta será redefinida.")) {
+                
+                saldoCorrente = 0.00;
+                saldoPoupanca = 0.00;
+                extratoMovimentacoes = []; 
+                
+                meta.nome = "Não Definida";
+                meta.valorAlvo = 0.00;
+                
+                atualizarSaldosUI();
+                renderizarExtrato();
+                alert("Simulação zerada! Faça o seu primeiro depósito e defina sua meta para começar.");
+            }
+        }
+
+
+        function adicionarMovimentacao(tipo, valor, descricao, conta) {
+            extratoMovimentacoes.push({
+                tipo: tipo,
+                valor: valor,
+                descricao: descricao,
+                conta: conta, 
+                data: new Date().toLocaleDateString('pt-BR')
+            });
+        }
+
+        function atualizarSaldosUI() {
+            const saldoTotal = saldoCorrente + saldoPoupanca;
+            
+            saldoTotalElement.textContent = formatarMoeda(saldoTotal);
+            saldoTotalElement.style.color = saldoTotal < 0 ? '#dc3545' : '#4CAF50';
+
+            saldoCorrenteElement.textContent = formatarMoeda(saldoCorrente);
+            saldoCorrenteElement.style.color = saldoCorrente < 0 ? '#dc3545' : '#555';
+            
+            saldoPoupancaElement.textContent = formatarMoeda(saldoPoupanca);
+            
+            meta.valorAtingido = Math.max(0, saldoPoupanca); 
+            renderizarMeta();
+        }
+
+        function renderizarExtrato() {
+            listaExtrato.innerHTML = ''; 
+
+            if (extratoMovimentacoes.length === 0) {
+                listaExtrato.innerHTML = '<p>Nenhuma transação ainda...</p>';
+                return;
+            }
+
+            // Exibir as 15 últimas movimentações (mais recentes primeiro)
+            const ultimasMovimentacoes = extratoMovimentacoes.slice(-15).reverse();
+
+            ultimasMovimentacoes.forEach(movimento => {
+                const li = document.createElement('li');
+                const valorFormatado = formatarMoeda(movimento.valor);
+                
+                let prefixo = '';
+                let classeValor = 'valor-saque';
+                
+                if (movimento.tipo === 'deposito' || movimento.descricao.includes("TRANSFERÊNCIA [P -> C]")) {
+                    classeValor = 'valor-deposito';
+                    prefixo = '+';
+                } else if (movimento.tipo === 'saque' || movimento.descricao.includes("TRANSFERÊNCIA [C -> P]")) {
+                    classeValor = 'valor-saque';
+                    prefixo = '-';
+                }
+                
+                if(movimento.descricao.includes("Rendimento")) {
+                    classeValor = 'rendimento';
+                    prefixo = '+';
+                } else if (movimento.descricao.includes("[MÊS FIXO] TRANSFERÊNCIA")) {
+                    classeValor = movimento.conta === 'poupanca' ? 'rendimento' : 'valor-saque';
+                    prefixo = movimento.conta === 'poupanca' ? '»' : '-'; 
+                }
+
+                const data = movimento.data ? `(${movimento.data})` : '';
+                const contaLabel = movimento.conta === 'poupanca' ? ' (Poup.)' : ' (Corr.)';
+                const contaClasse = movimento.conta === 'poupanca' ? 'conta-poupanca' : 'conta-corrente';
+                
+                li.innerHTML = `
+                    <span>${movimento.descricao} <small class="${contaClasse}">${contaLabel}</small> ${data}</span>
+                    <span class="${classeValor}">${prefixo} ${valorFormatado}</span>
+                `;
+                listaExtrato.appendChild(li);
+            });
+        }
+
+        // -----------------------------------------------------------
+        // Funções de Metas (Inalteradas)
+        // -----------------------------------------------------------
+
+        function salvarMeta() {
+            const nome = document.getElementById('meta-nome').value.trim();
+            const valorAlvo = parseFloat(document.getElementById('meta-valor').value);
+
+            if (nome === '' || isNaN(valorAlvo) || valorAlvo <= 0) {
+                alert('Por favor, defina um nome e um valor alvo válido para sua meta.');
+                return;
+            }
+
+            meta.nome = nome;
+            meta.valorAlvo = valorAlvo;
+            alert(`Meta atualizada para: ${nome} (Alvo: ${formatarMoeda(valorAlvo)})`);
+            renderizarMeta();
+        }
+
+        function renderizarMeta() {
+            let progressoPorcentagem = 0;
+
+            if (meta.valorAlvo > 0) {
+                 progressoPorcentagem = Math.min(100, (meta.valorAtingido / meta.valorAlvo) * 100);
+            }
+           
+            metaNomeDisplay.textContent = meta.nome;
+            metaValorDisplay.textContent = formatarMoeda(meta.valorAlvo);
+            metaAtingidoDisplay.textContent = formatarMoeda(meta.valorAtingido);
+            progressoFill.style.width = progressoPorcentagem + '%';
+            metaProgressoTexto.textContent = `${progressoPorcentagem.toFixed(1)}% atingido`;
+
+            if (progressoPorcentagem >= 100) {
+                 metaProgressoTexto.textContent = '100.0% - PARABÉNS! META CONCLUÍDA!';
+                 progressoFill.style.backgroundColor = '#4CAF50'; 
+            } else if (meta.valorAlvo === 0) {
+                 metaProgressoTexto.textContent = '0% - Defina um Alvo!';
+                 progressoFill.style.backgroundColor = '#FFA726';
+            } else {
+                 progressoFill.style.backgroundColor = '#FFA726'; 
+            }
+        }
+
+        // -----------------------------------------------------------
+        // Funções de Recorrentes (Inalteradas)
+        // -----------------------------------------------------------
+
+        function controlarVisibilidadeContaRecorrente() {
+            const tipo = recorrenteTipoSelect.value;
+            if (tipo === 'transferencia') {
+                recorrenteContaGroup.style.display = 'none';
+            } else {
+                recorrenteContaGroup.style.display = 'block';
+            }
+        }
+
+        function adicionarRecorrente(event) {
+            event.preventDefault(); 
+            const tipo = recorrenteTipoSelect.value;
+            const valorInput = document.getElementById('recorrente-valor').value;
+            const descricao = document.getElementById('recorrente-descricao').value.trim();
+            const valor = parseFloat(valorInput);
+
+            if (isNaN(valor) || valor <= 0 || descricao === '') {
+                alert('Por favor, insira um valor e uma descrição válidos para o item recorrente.');
+                return;
+            }
+
+            if (tipo === 'transferencia') {
+                recorrentes.push({ tipo, valor, descricao, conta: 'transfer' }); 
+                alert(`Transferência recorrente "${descricao}" adicionada (Corrente -> Poupança)!`);
+            } else {
+                const conta = document.getElementById('recorrente-conta').value;
+                recorrentes.push({ tipo, valor, descricao, conta });
+                alert(`Item recorrente "${descricao}" adicionado!`);
+            }
+            
+            renderizarRecorrentes();
+            formRecorrente.reset();
+        }
+
+        function removerRecorrente(index) {
+            if (confirm(`Tem certeza que deseja remover o item "${recorrentes[index].descricao}"?`)) {
+                recorrentes.splice(index, 1);
+                renderizarRecorrentes();
+            }
+        }
+
+        function renderizarRecorrentes() {
+            listaRecorrentes.innerHTML = '';
+            if (recorrentes.length === 0) {
+                listaRecorrentes.innerHTML = '<p>Nenhum item fixo cadastrado...</p>';
+                return;
+            }
+
+            recorrentes.forEach((item, index) => {
+                const li = document.createElement('li');
+                let displayInfo;
+                
+                if (item.tipo === 'transferencia') {
+                    const classeValor = 'rendimento'; 
+                    const prefixo = '»';
+                    displayInfo = `
+                        <span>${item.descricao} <small>(C → P) Fixo</small></span>
+                        <span class="${classeValor}" style="margin-right: 15px;">${prefixo} ${formatarMoeda(item.valor)}</span>
+                    `;
+                } else {
+                    const isReceita = item.tipo === 'salario';
+                    const classeValor = isReceita ? 'valor-deposito' : 'valor-saque';
+                    const prefixo = isReceita ? '+' : '-';
+                    const contaLabel = item.conta === 'poupanca' ? ' (Poup.)' : ' (Corrent.)';
+                    const contaClasse = item.conta === 'poupanca' ? 'conta-poupanca' : 'conta-corrente';
+                    
+                    displayInfo = `
+                        <span>${item.descricao} <small class="${contaClasse}">${contaLabel}</small></span>
+                        <span class="${classeValor}" style="margin-right: 15px;">${prefixo} ${formatarMoeda(item.valor)}</span>
+                    `;
+                }
+
+                li.innerHTML = displayInfo + `<button onclick="removerRecorrente(${index})" style="background: #f44336; color: white; border: none; padding: 3px 6px; cursor: pointer; border-radius: 3px; font-size: 0.7em;">X</button>`;
+                listaRecorrentes.appendChild(li);
+            });
+        }
+
+        // -----------------------------------------------------------
+        // Funções de Simulação Principal (Refatoradas e Novas)
+        // -----------------------------------------------------------
+        
+        // NOVO CORE: Aplica a lógica de um mês sem atualizar a UI/Alert
+        function aplicarUmMes() {
+            let resumoMensal = {
+                rendimento: 0,
+                depositos: 0,
+                saques: 0,
+                transferenciasCtoP: 0
+            };
+
+            // 1. Aplica Recorrentes
+            recorrentes.forEach(item => {
+                const valor = item.valor;
+                const conta = item.conta;
+                
+                if (item.tipo === 'transferencia') {
+                    if (saldoCorrente >= valor) {
+                        saldoCorrente -= valor;
+                        saldoPoupanca += valor;
+                        resumoMensal.transferenciasCtoP += valor;
+                        adicionarMovimentacao('transferencia', valor, `[MÊS FIXO] TRANSFERÊNCIA C->P: ${item.descricao}`, 'corrente');
+                        adicionarMovimentacao('transferencia', valor, `[MÊS FIXO] TRANSFERÊNCIA C->P: ${item.descricao}`, 'poupanca');
+                    }
+                } else {
+                    const tipoMovimento = item.tipo === 'salario' ? 'deposito' : 'saque';
+                    
+                    if (item.tipo === 'salario') {
+                        if (conta === 'corrente') saldoCorrente += valor;
+                        else saldoPoupanca += valor;
+                        resumoMensal.depositos += valor;
+                    } else { // Conta (Despesa Fixa)
+                        if (conta === 'corrente') saldoCorrente -= valor;
+                        else saldoPoupanca -= valor;
+                        resumoMensal.saques += valor;
+                    }
+                    adicionarMovimentacao(tipoMovimento, valor, `[MÊS FIXO] ${item.descricao}`, conta);
+                }
+            });
+
+            // 2. Aplica Rendimento (Poupança)
+            if (saldoPoupanca > 0) {
+                const rendimento = saldoPoupanca * (TAXA_JUROS_MENSAL / 100);
+                saldoPoupanca += rendimento;
+                resumoMensal.rendimento = rendimento;
+                adicionarMovimentacao('deposito', rendimento, `Rendimento de Juros (Taxa: ${TAXA_JUROS_MENSAL}%)`, 'poupanca');
+            }
+            
+            return resumoMensal;
+        }
+
+        // Simulação de UM MÊS (mantém o comportamento do clique único)
+        function simularFimDoMes() {
+            const resumoMensal = aplicarUmMes();
+            
+            let resumo = "--- Resultado do Mês ---";
+            resumo += `\n- Rendimento Poupança: + ${formatarMoeda(resumoMensal.rendimento)}`;
+            resumo += `\n- Transferências C->P: ${formatarMoeda(resumoMensal.transferenciasCtoP)}`;
+            resumo += `\n- Receitas Recorrentes: + ${formatarMoeda(resumoMensal.depositos)}`;
+            resumo += `\n- Despesas Recorrentes: - ${formatarMoeda(resumoMensal.saques)}`;
+
+            atualizarSaldosUI();
+            renderizarExtrato(); 
+            alert(`Mês concluído!\n${resumo}\n\nNovo Saldo Total: ${formatarMoeda(saldoCorrente + saldoPoupanca)}.`);
+        }
+
+        // NOVA FUNÇÃO: Simulação de MÚLTIPLOS MESES
+        function simularMultiplosMeses(event) {
+            event.preventDefault();
+
+            const numMesesInput = document.getElementById('num-meses');
+            const numMeses = parseInt(numMesesInput.value);
+
+            if (isNaN(numMeses) || numMeses < 1 || numMeses > 60) {
+                alert("Por favor, insira um número de meses válido entre 1 e 60.");
+                return;
+            }
+            
+            const saldoInicial = saldoCorrente + saldoPoupanca;
+            
+            let totalRendimento = 0;
+            
+            // Loop de simulação
+            for (let i = 0; i < numMeses; i++) {
+                const resumoMensal = aplicarUmMes();
+                totalRendimento += resumoMensal.rendimento;
+            }
+
+            const saldoFinal = saldoCorrente + saldoPoupanca;
+            
+            // Atualiza UI apenas uma vez
+            atualizarSaldosUI();
+            renderizarExtrato();
+
+            // Constrói o resumo final
+            let resumo = `--- Simulação de ${numMeses} Meses Concluída ---\n`;
+            resumo += `\nSaldo Total Inicial: ${formatarMoeda(saldoInicial)}`;
+            resumo += `\nTotal de Rendimento (Poupança): + ${formatarMoeda(totalRendimento)}`;
+            resumo += `\nLucro/Prejuízo Total: ${formatarMoeda(saldoFinal - saldoInicial)}`;
+            resumo += `\n--------------------------------------`;
+            resumo += `\nNovo Saldo Corrente: ${formatarMoeda(saldoCorrente)}`;
+            resumo += `\nNovo Saldo Poupança: ${formatarMoeda(saldoPoupanca)}`;
+            resumo += `\nNovo Saldo TOTAL: ${formatarMoeda(saldoFinal)}`;
+
+            alert(resumo);
+        }
+
+
+        // -----------------------------------------------------------
+        // Funções de Transação e Inicialização
+        // -----------------------------------------------------------
+        
+        function controlarVisibilidadeConta() {
+            const tipo = tipoSelect.value;
+            const isTransfer = tipo.includes('transferir');
+            
+            contaSelectGroup.style.display = isTransfer ? 'none' : 'block';
+        }
+
+        function lidarComTransacao(event) {
+            event.preventDefault(); 
+
+            const tipo = tipoSelect.value;
+            const valorInput = document.getElementById('valor').value;
+            const descricao = document.getElementById('descricao').value.trim();
+            const valor = parseFloat(valorInput);
+
+            const conta = document.getElementById('conta').value; 
+
+            if (isNaN(valor) || valor <= 0 || descricao === '') {
+                alert('Por favor, insira um valor e uma descrição válidos.');
+                return;
+            }
+
+            if (tipo === 'deposito' || tipo === 'saque') {
+                const operacao = tipo === 'deposito' ? 1 : -1;
+                
+                let saldoReferencia = conta === 'corrente' ? saldoCorrente : saldoPoupanca;
+                
+                if (tipo === 'saque' && saldoReferencia - valor < 0 && conta === 'corrente') {
+                    alert('Atenção: Saque levará o saldo da Corrente a ficar negativo (Simulando Cheque Especial/Dívida)! Prossiga com cautela.');
+                }
+                
+                if (conta === 'corrente') saldoCorrente += valor * operacao;
+                else saldoPoupanca += valor * operacao;
+
+                adicionarMovimentacao(tipo, valor, descricao, conta);
+
+            } else if (tipo === 'transferir_para_poupanca') {
+                if (saldoCorrente - valor < 0) {
+                    alert('Saldo Insuficiente na Conta Corrente para transferir para a Poupança.');
+                    return;
+                }
+                saldoCorrente -= valor;
+                saldoPoupanca += valor;
+                adicionarMovimentacao('transferencia', valor, `TRANSFERÊNCIA [C -> P]: ${descricao}`, 'corrente');
+                adicionarMovimentacao('transferencia', valor, `TRANSFERÊNCIA [C -> P]: ${descricao}`, 'poupanca');
+            
+            } else if (tipo === 'transferir_para_corrente') {
+                if (saldoPoupanca - valor < 0) {
+                    alert('Saldo Insuficiente na Conta Poupança para transferir para a Corrente.');
+                    return;
+                }
+                saldoPoupanca -= valor;
+                saldoCorrente += valor;
+                adicionarMovimentacao('transferencia', valor, `TRANSFERÊNCIA [P -> C]: ${descricao}`, 'poupanca');
+                adicionarMovimentacao('transferencia', valor, `TRANSFERÊNCIA [P -> C]: ${descricao}`, 'corrente');
+            }
+
+            formTransacao.reset();
+            atualizarSaldosUI();
+            renderizarExtrato();
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Configura os Listeners
+            formTransacao.addEventListener('submit', lidarComTransacao);
+            formRecorrente.addEventListener('submit', adicionarRecorrente);
+            btnFimMes.addEventListener('click', simularFimDoMes);
+            
+            // NOVO Listener para a simulação de meses em lote
+            formSimulacaoMeses.addEventListener('submit', simularMultiplosMeses); 
+            
+            // Listeners de UI
+            tipoSelect.addEventListener('change', controlarVisibilidadeConta);
+            recorrenteTipoSelect.addEventListener('change', controlarVisibilidadeContaRecorrente);
+            btnLimparExtrato.addEventListener('click', limparExtrato);
+
+
+            // Renderização inicial
+            atualizarSaldosUI();
+            renderizarExtrato();
+            renderizarMeta();
+            renderizarRecorrentes();
+            controlarVisibilidadeConta(); 
+            controlarVisibilidadeContaRecorrente();
+        });
+    </script>
+
+</body>
+</html>
