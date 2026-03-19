@@ -2,3 +2,8 @@ body{
     background-color: rgb(57, 57, 57);
     color:rgb(240, 240, 240)
 }
+a{
+    color: rgb(240, 240, 240);
+    text-decoration: none;
+    font-weight: bold;
+}
