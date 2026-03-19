@@ -7,3 +7,7 @@ a{
     text-decoration: none;
     font-weight: bold;
 }
+input {
+    background-color: rgb(67, 67, 67);
+    color: rgb(240, 240, 240);
+}
