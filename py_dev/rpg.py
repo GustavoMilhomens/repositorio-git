@@ -5,8 +5,5 @@ class Jogador():
         self.classe = classe
         self.arma = ''
 
-#jogador = Jogador(input('informe o nome do jogador: '), input('informe a raça: '), input('informe a classe: '))
-#print(f"nome: {jogador.nome}\nraça: {jogador.raca}\nclasse: {jogador.classe}")
-a=int(input("número: ")); if (a%2) == print('par')
-#else: print('impar')
-
+jogador = Jogador(input('informe o nome do jogador: '), input('informe a raça: '), input('informe a classe: '))
+print(f"nome: {jogador.nome}\nraça: {jogador.raca}\nclasse: {jogador.classe}")
