@@ -1,11 +1,121 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>inicio</title>
-    </head>
-    <body>
-        <h1 style="text-align: center; height: 300px; width: 80%;">inicio</h1>
-    </body>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface Jogo de Matemática</title>
+    <style>
+        body {
+            background-color: #1a1a1a; /* Fundo escuro característico [1-3] */
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        /* Barra de Status Superior [3] */
+        header {
+            background-color: #1a1a1a;
+            padding: 15px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            font-weight: bold;
+        }
+        .stat { display: flex; align-items: center; gap: 8px; }
+        .stat.gold { color: #f1c40f; } /* Cor dos diamantes [3] */
+        .stat.purple { color: #a29bfe; }
+
+        /* Container Principal [3] */
+        .game-map {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .chapter-card {
+            background-color: #0088cc; /* Azul vibrante [1, 3] */
+            width: 90%;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px #006699;
+        }
+        .chapter-card h3 { margin: 5px 0 0 0; }
+
+        /* Caminho de Níveis Hexagonais [3] */
+        .path { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .hex {
+            width: 60px;
+            height: 60px;
+            background-color: #2ecc71; /* Verde para concluído [3] */
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: inset 0 -4px rgba(0,0,0,0.2);
+        }
+        .hex.locked { background-color: #3d3d3d; color: #777; }
+        
+        /* Botão Começar [1, 3] */
+        .btn-start {
+            background-color: #0088cc;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px #005a87;
+            margin: 10px 0;
+        }
+
+        /* Navegação Inferior [4-6] */
+        footer {
+            background-color: #1a1a1a;
+            padding: 15px;
+            display: flex;
+            justify-content: space-around;
+            border-top: 2px solid #333;
+        }
+        .nav-item { font-size: 24px; opacity: 0.5; cursor: pointer; }
+        .nav-item.active { opacity: 1; color: #0088cc; border: 2px solid #0088cc; border-radius: 10px; padding: 2px 8px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="stat">🔥 0</div>
+        <div class="stat gold">💎 130</div>
+        <div class="stat purple">⚡ 5</div>
+    </header>
+
+    <div class="game-map">
+        <div class="chapter-card">
+            <small>Seção 1, Capítulo 1</small>
+            <h3>Matemática: Adição e Subtração</h3>
+        </div>
+
+        <div class="path">
+            <div class="hex">✔</div>
+            <div class="hex">✔</div>
+            <div class="hex locked">📖</div>
+            <button class="btn-start">COMEÇAR</button>
+            <div class="hex locked">🧠</div>
+            <div class="hex locked">⭐</div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="nav-item active">🗺️</div>
+        <div class="nav-item">🚩</div>
+        <div class="nav-item">🏆</div>
+        <div class="nav-item">👤</div>
+    </footer>
+</body>
 </html>

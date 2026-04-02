@@ -1,13 +1,16 @@
 body{
-    background-color: #d8eafc;
-    color: #3f3f3f;
+    background-color: #1E1E1E;
+    color: #eaeaea;
 }
-form{
+.form_div{
     text-align: center;
-    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* transform: translate(-50%, -50%) */
 }
 /* 
-Dark Chumbo (#1E1E1E) -O Espaço de Foco 
+Dark Chumbo (#1E1E1E) -O Espaço de fundo 
 Vibrant Blue (#1E88E5) -Ação e Interação
 Progress Green (#43A047) Avanço e Correção
 Achievement Yellow (#FDD835) -Recompensas e Destaque
