@@ -8,22 +8,30 @@
     </head>
     <body>
         <div class="centro">
+            <input type="color" name="" id="cor" value="rgb(2, 100, 255)">
+            <input type="button" onclick="cor_alt()" >
             <div>
-                <input type="button" value="1">
-                <input type="button" value="2">
-                <input type="button" value="3">
+                <input type="button" id="num" value="1">
+                <input type="button" id="num" value="2">
+                <input type="button" id="num" value="3">
             </div>
             <div>
-                <input type="button" value="4">
-                <input type="button" value="5">
-                <input type="button" value="6">
+                <input type="button" id="num" value="4">
+                <input type="button" id="num" value="5">
+                <input type="button" id="num" value="6">
             </div>
             <div>
-                <input type="button" value="7">
-                <input type="button" value="8">
-                <input type="button" value="9">
+                <input type="button" id="num" value="7">
+                <input type="button" id="num" value="8">
+                <input type="button" id="num" value="9">
             </div>
         </div>
+        <script>
+            function cor_alt(){
+                let cor_elemento = document.getElementById('num');
+                cor_elemento.style.color = document.getElementById('cor').value;
+            }
+        </script>
     </body>
 </html>
 
