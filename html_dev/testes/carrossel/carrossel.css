@@ -1,3 +1,52 @@
 body{
     background-color: rgb(61, 61, 61);
 }
+
+carrossel{
+    display: block;
+    position: relative;
+    width: 100%; /*tamanho na tela */
+    max-width: 800%;
+    margin: auto;
+    padding: 0 50px;
+    box-sizing: border-box;
+}
+.slide{
+    flex: 0 0 100%;
+    height: 300px;
+    background-color: rgb(31, 31, 31);
+    color: rgb(255, 255, 255);
+    /* font-size: 3rem;  tamanho da letra */
+    display: flex;
+    justify-content: center; /*alinha na horizontal*/
+    align-items: center; /*alinha na vertical*/
+    text-align: center; /*alinha texto*/
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgb(246, 246, 142);
+    
+}
+.pagina{
+    display: flex;
+    overflow: auto; /* Habilita o scroll horizontal */
+    scroll-snap-type: x mandatory; /* O SEGREDO DO CSS: Força o encaixe */
+    scroll-behavior: smooth; /* Suaviza a rolagem pelo JS ou âncoras */
+    gap: 15px;
+    padding: 10px 0;
+    
+}
+.pagina::-webkit-scrollbar{
+    display: none; /* esconde o scroll*/
+}
+.btn{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(70, 69, 69, 0); /*deixa o fundo transparente*/ 
+    color: rgb(254, 254, 254);
+    border: none; /*some a borda*/
+    width: 40px;
+    cursor:pointer; /*muda o estilo do cursor*/
+    font-size: large; /*tamanho da fonte*/
+}
+.btn.prev{left: 0;}
+.btn.next{right: 0;}
