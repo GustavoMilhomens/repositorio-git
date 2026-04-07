@@ -8,16 +8,50 @@
     </head>
     <body>
         <carrossel>
-            <button class="btn prev">❮</button>
+            <button class="btn prev" id="btn_prev">❮</button>
             
             <div class="pagina" id="pagina">
-                <div class="slide "><figure><img src="img.png" alt="sem imagem"><figcaption>Teste 1</figcaption></figure></div>
-                <div class="slide "><figure><img src="img.png" alt="sem imagem"><figcaption>Teste 2</figcaption></figure></div>
-                <div class="slide "><figure><img src="img.png" alt="sem imagem"><figcaption>Teste 3</figcaption></figure></div>
-                <div class="slide "><figure><img src="img.png" alt="sem imagem"><figcaption>Teste 4</figcaption></figure></div>
+                <div class="slide "><figure class="fig1"><img src="img.png" alt="sem imagem"><figcaption>Teste 1</figcaption></figure></div>
+                <div class="slide "><figure class="fig2"><img src="img.png" alt="sem imagem"><figcaption>Teste 2</figcaption></figure></div>
+                <div class="slide "><figure class="fig3"><img src="img.png" alt="sem imagem"><figcaption>Teste 3</figcaption></figure></div>
+                <div class="slide "><figure class="fig4"><img src="img.png" alt="sem imagem"><figcaption>Teste 4</figcaption></figure></div>
             </div>
 
-            <button class="btn next">❯</button>
+            <button class="btn next" id="btn_next">❯</button>
         </carrossel>
+        <script>
+        /* ==============================
+           JavaScript - Lógica de Movimento
+           ============================== */
+        const track = document.getElementById('pagina');
+        const nextBtn = document.getElementById('btn_next');
+        const prevBtn = document.getElementById('btn_prev');
+
+        // Função para mover o slide
+        function move(direction) {
+            // Descobre a largura de um item (incluindo o gap se houver, usando clientWidth)
+            const itemWidth = track.firstElementChild.clientWidth;
+            
+            // Calcula o gap (espaçamento) real
+            const computedStyle = getComputedStyle(track);
+            const gap = parseInt(computedStyle.gap) || 0;
+
+            // Define a quantidade do scroll (largura do item + espaçamento)
+            const scrollAmount = itemWidth + gap;
+
+            // scrollBy rola "relativo" à posição atual
+            track.scrollBy({
+                left: scrollAmount * direction,
+                behavior: 'smooth' // Garante a animação suave
+            });
+        }
+
+        // Eventos dos botões
+        // Direction 1 = Próximo (Direita)
+        nextBtn.addEventListener('click', () => move(1));
+        
+        // Direction -1 = Anterior (Esquerda)
+        prevBtn.addEventListener('click', () => move(-1));
+    </script>
     </body>
 </html>
