@@ -14,7 +14,7 @@ carrossel{
 .slide{
     flex: 0 0 100%;
     height: 300px;
-    background-color: rgb(31, 31, 31);
+    background-color: rgba(31, 31, 31, 0);
     color: rgb(255, 255, 255);
     /* font-size: 3rem;  tamanho da letra */
     display: flex;
@@ -22,9 +22,9 @@ carrossel{
     align-items: center; /*alinha na vertical*/
     text-align: center; /*alinha texto*/
     border-radius: 15px;
-    box-shadow: 0 4px 10px rgb(246, 246, 142);
     
 }
+
 .pagina{
     display: flex;
     overflow: auto; /* Habilita o scroll horizontal */
@@ -32,6 +32,7 @@ carrossel{
     scroll-behavior: smooth; /* Suaviza a rolagem pelo JS ou âncoras */
     gap: 15px;
     padding: 10px 0;
+    
     
 }
 .pagina::-webkit-scrollbar{
@@ -47,6 +48,18 @@ carrossel{
     width: 40px;
     cursor:pointer; /*muda o estilo do cursor*/
     font-size: large; /*tamanho da fonte*/
+    
 }
+figcaption{
+    margin: 5px;
+    box-sizing: border-box;
+    text-decoration:underline;
+    
+}
+.fig1{box-shadow: 0 4px 15px rgb(246, 149, 142);}
+.fig2{box-shadow: 0 4px 15px rgb(246, 239, 142);}
+.fig3{box-shadow: 0 4px 15px rgb(166, 246, 142);}
+.fig4{box-shadow: 0 4px 15px rgb(142, 246, 246);}
+
 .btn.prev{left: 0;}
 .btn.next{right: 0;}
