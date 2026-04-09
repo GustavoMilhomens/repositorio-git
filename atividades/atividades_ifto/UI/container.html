@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>menu</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <!-- <div>
+            <button class="open-btn" onclick="toggleSidebar()">☰ Menu</button>
+
+            <div id="mySidebar" class="sidebar">
+                <a href="javascript:void(0)" class="close-btn" onclick="toggleSidebar()">&times;</a>
+                <h2>Usuário</h2>
+                <hr>
+                <a href="#perfil">Meu Perfil</a>
+                <a href="#config">Configurações</a>
+                <a href="#mensagens">Mensagens</a>
+                <a href="#sair">Sair</a> 
+            </div>
+
+            <div id="main-content">
+                <h1>Bem-vindo ao Site</h1>
+                <p>Clique no botão acima para ver as opções.</p>
+            </div>
+        </div> -->
+        <button class="open-btn posicao" onclick="toggleSidebar()">☰ Menu</button>
+        <div id="mySidebar" class="sidebar posicao">
+            
+            <a href="javascript:void(0)" class="close-btn" onclick="toggleSidebar()">&times;</a>
+            
+            <h2>Usuário</h2>
+            <hr>
+            
+            <a href="#perfil">Meu Perfil</a>
+
+            <details class="submenu">
+                <summary>Configurações ▾</summary>
+                <div class="submenu-content">
+                <a href="#tema">Mudar Tema</a>
+                <a href="#senha">Alterar Senha</a>
+                <a href="#privacidade">Privacidade</a>
+                </div>
+            </details>
+
+            <a href="#sair">Sair</a>
+        </div>
+        <script>
+            function toggleSidebar() {
+                const sidebar = document.getElementById("mySidebar");
+                sidebar.classList.toggle("active");
+            }
+        </script>
+    </body>
+</html>
