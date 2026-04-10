@@ -11,5 +11,11 @@ async function includeSidebar() {
     }
 }
 
+// 2. Função para abrir/fechar (alterna a classe CSS)
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar-placeholder');
+    sidebar.classList.toggle('active');
+}
+
 // Inicia o carregamento
 includeSidebar();

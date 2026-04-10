@@ -1,0 +1,27 @@
+body { font-family: sans-serif; margin: 0; overflow-x: hidden; }
+
+#sidebar-placeholder {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    right: -250px; /* Escondido no leste */
+    background-color: #111;
+    transition: 0.4s;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+}
+
+/* Quando estiver ativo */
+#sidebar-placeholder.active {
+    right: 0;
+}
+
+.open-btn {
+    padding: 10px 20px;
+    cursor: pointer;
+    background: #222;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
