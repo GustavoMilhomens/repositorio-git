@@ -50,4 +50,6 @@
 │
 ├── main.js                                      (O script com configurações dos complementos)
 │
+├── style.css
+│
 └── index.html                                   (Página principal/Home: explicação sobre a materia e o aluno )
