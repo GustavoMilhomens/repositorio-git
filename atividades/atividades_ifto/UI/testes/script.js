@@ -17,5 +17,9 @@ function toggleSidebar() {
     sidebar.classList.toggle('active');
 }
 
+// 3. configura a linguagem para portugues 
+document.documentElement.lang = "pt-br";
+
+
 // Inicia o carregamento
 includeSidebar();
