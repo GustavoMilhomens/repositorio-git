@@ -1,0 +1,53 @@
+/UI  (Pasta Raiz)
+├── /atvs                                       (Pasta das Atividades)
+│   ├── /atv2                                    (Pasta da Atividade 2: A evolução do windows)
+│   │   ├── index.html
+│   │   ├── ...
+│   │   └──
+│   │
+│   ├── /atv3                                    (Pasta da Atividade 3: A evolução da apple)
+│   │   ├── index.html
+│   │   ├── ...
+│   │   └──
+│   │
+│   ├── /atv4                                    (Pasta da Atividade 4: Critica a sites que não seguem os principios de espaçamento )
+│   │   ├── index.html
+│   │   ├── ...
+│   │   └──
+│   │
+│   ├── /atv5                                    (Pasta da Atividade 5: Pesquisa sobre ferramentas para estabelecer consistência e padronização em UI)
+│   │   ├── index.html                           (breve explicação dobre a atividade)
+│   │   ├── fremeworks.html
+│   │   ├── atomic_disign.html
+│   │   ├── style_guide.html
+│   │   ├── ...
+│   │   └── /imgs
+│   │       ├── angular-logo.png
+│   │       ├── bootstrap-logo.png
+│   │       ├── svelte-logo.png
+│   │       ├── ...
+│   │       └── 
+│   │
+│   ├── /pesquisa_gestalt_heuristica             (Pasta da Atividade de pesquisa sobre gestailt e heuristica)
+│   │   ├── index.html
+│   │   ├── ...
+│   │   └── /imgs
+│   │       ├── ...
+│   │       └── 
+│   │
+│   ├── /...
+│   │   ├── ...
+│   │   └── 
+│   │
+│   └── /...
+│       ├── ...
+│       └── 
+│
+├── /complementos
+│   ├── barra_menu.html                                 (O template do menu + CSS)
+│   ├── ...
+│   └── ...
+│
+├── main.js                                      (O script com configurações dos complementos)
+│
+└── index.html                                   (Página principal/Home: explicação sobre a materia e o aluno )
