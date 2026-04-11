@@ -2,12 +2,12 @@
 document.documentElement.lang="pt-br";
 
 // procura o aqrqquivo de menu 
-async function include_painel_bar() {
+async function include_menu_bar() {
     // coleta o caminho do menu 
-    const painel_bar = await fetch('complementos/barra_painel.html');
+    const menu_bar = await fetch('complementos/barra_menu.html');
 
-    document.getElementById('painel_div').innerHTML = await painel_bar.text();
+    document.getElementById('menu_div').innerHTML = await menu_bar.text();
     
 }
 
-include_painel_bar()
+include_menu_bar()
