@@ -10,4 +10,11 @@ async function include_menu_bar() {
     
 }
 
+
+// abre e fecha o menu 
+function open_close_menu(){
+        const menu = document.getElementById('menu_div_bar');
+        menu.classList.toggle('active')
+    }
+
 include_menu_bar()

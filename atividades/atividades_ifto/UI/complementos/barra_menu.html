@@ -1,7 +1,44 @@
-<div>
-    <button id="btn_open" onclick="open_menu()">☰ Menu</button>
+<button id="btn_open" onclick="open_close_menu()">☰</button>
+<!-- ☰ Menu -->
+<div id="menu_div_bar">
+    <!-- <button id="btn_close" onclick="open_close_menu()">x</button> -->
+    <br><br>
+    <hr>
     <details>
-        <summary>abc</summary>
-        <a href="">aaa</a>
+        <summary>...</summary>
+        ...
+    </details>
+    <details>
+        <summary>Configurações</summary>
+        ...
+        
     </details>
 </div>
+
+<style>
+    #menu_div_bar{
+        background-color: rgb(35, 35, 35);
+        transition: 0,5s;
+        height: 100%;
+        width: 35%;
+        position: fixed;
+        z-index: 100;  /* seleciona a camada */
+        top: 0;  /* deixa a div ocupar a tela inteira */
+        right: -35%;
+        
+    }
+    #menu_div_bar.active{
+        right: 0;
+    }
+
+    /* #btn_open, #btn_close{ */
+    #btn_open{
+        right: 0;
+        position: fixed;
+        top: 0;
+        z-index: 1000;
+
+        
+    }
+</style>
+
