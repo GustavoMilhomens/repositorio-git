@@ -5,13 +5,12 @@ document.documentElement.lang="pt-br";
 async function include_complement() {
     // coleta o caminho do menu 
     const menu_bar = await fetch('complementos/barra_menu.html');
-
     document.getElementById('menu_div').innerHTML = await menu_bar.text();
     
     // coleta o caminho da caxa de preferencias
     const preference_box = await fetch('complementos/preferencias.html');
     document.getElementById('preference_div').innerHTML = await preference_box.text();
-
+    
 }
 
 //// abre e fecha o menu 

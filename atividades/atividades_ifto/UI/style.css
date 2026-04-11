@@ -15,8 +15,8 @@ body.dark_theme{
     --text-color: rgb(255, 255, 255);
 }
 
+
 /* modifica a aparencia do site */
-/* body, button, #preference_div_box, #menu_div_bar{ */
 body{
     /* ============================== body-color ================================= */
     background-color: var(--bg-body-color);
@@ -27,15 +27,39 @@ body{
 
     /* customiza a barra de menu */
     #menu_div_bar{
+        /* cor */
         background-color: var(--bg-menu-color);
         color: var(--text-color);
-        transition: 0.5s;
+
+        /* formato */
+        border: 10px;
+        border-color: rgb(249, 249, 249);
         height: 100%;
         width: 25%;
+        
+        /* posição */
         position: fixed;
         z-index: 100;  /* seleciona a camada */
         top: 0;  /* deixa a div ocupar a tela inteira */
         right: -25%;
+
+        /* outros */
+        cursor: pointer;
+        transition: 0.5s;
+        
+        a{
+            color: var(--text-color);
+            text-decoration: none;
+        }
+        
+        button{
+            background-color: rgba(240, 248, 255, 0);
+            color: var(--text-color);
+            border: none;
+            cursor: pointer;
+        }
+        
+        
     }
 
     /* modifica a localização da div se ela estiver como ativa fazendo ela ficar visivel */
@@ -46,17 +70,20 @@ body{
     /* butão de ativação da barra menu  */
     #btn_menu{
         /* cor */
-        /* formato */
-        /* posição */
         background-color: var(--bg-btn-color);
         color: var(--text-color);
+
+        /* formato */
+        border-radius: 15%;
+        height: 30px;
+        width: 30px;
+
+        /* posição */
         right: 0;
         position: fixed;
         top: 0;
         z-index: 1000;
-        border-radius: 15%;
-        height: 30px;
-        width: 30px;
+        
         
     }
 
@@ -69,23 +96,26 @@ body{
         color: var(--text-color);
 
         /* formato */
-        height: 75%;
-        width: 75%;
+        display: none;
+        border: 10px;
+        border-color: rgb(249, 249, 249);
+        height: 100%;
+        width: 100%;
 
         /* posição */
         position: fixed;
-        justify-content: center; /*centradlizze essa div*/
-        align-items: center;
         z-index: 1000;  /* seleciona a camada */
-        top: 0;  /* deixa a div ocupar a tela inteira */
-        /* right: -100%; */
-        left: -100%;
+        top: 0;  /* deixa a div ocupar o topo inteiro */
+        left: 0;
+
+        /* outros */
+
     }
 
     /* modifica a localização da div se ela estiver como ativa fazendo ela ficar visivel */
     #preference_div_box.active{
-        /* right: 0; */
-        left: 0;
+        /* remove a caixa de preferencia */
+        display: block;
 
     }
 
@@ -94,6 +124,8 @@ body{
         /* cor */
 
         /* formato */
+        border-radius: 100%;
+
         /* posição */
         position: absolute;
         right: 0;
@@ -104,9 +136,4 @@ body{
         color: var(--text-color);
     }
 
-    .feke_txt{
-        background-color: rgba(240, 248, 255, 0);
-        color: var(--text-color);
-        border: none;
-    }
 }
