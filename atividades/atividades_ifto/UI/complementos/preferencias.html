@@ -1,29 +1,7 @@
 <div id="preference_div_box" class="">
     <button id="close_preference" onclick="open_close_preference()">x</button>
 
+    <button id="btn_theme">tema</button>
 </div>
 
-<style>
-    #preference_div_box{
-        background-color: rgb(35, 35, 35);
-        transition: 0,5s;
-        height: 75%;
-        width: 75%;
-        position: fixed;
-        justify-content: center;      /*centradlizze essa div*/
-        align-items: center;
-        z-index: 100;  /* seleciona a camada */
-        top: 0;  /* deixa a div ocupar a tela inteira */
-        /* right: -100%; */
-        left: -100%;
-    }
 
-    #preference_div_box.active{
-        /* right: 0; */
-        left: 0;
-
-    }
-    #close_preference{
-        position: fixed;
-    }
-</style>

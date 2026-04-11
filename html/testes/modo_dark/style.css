@@ -5,7 +5,7 @@
 }
 
 /* Cores quando a classe .dark-theme estiver ativa */
-body.dark_theme, button.dark_theme {
+body.dark_theme{
 --bg-color: #1a1a1a;
 --text-color: #f0f0f0;
 }
