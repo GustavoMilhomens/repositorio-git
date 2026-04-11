@@ -1,4 +1,4 @@
-<button id="btn_open" onclick="open_close_menu()">☰</button>
+<button id="btn_menu" onclick="open_close_menu()">☰</button>
 <!-- ☰ Menu -->
 <div id="menu_div_bar">
     <!-- <button id="btn_close" onclick="open_close_menu()">x</button> -->
@@ -10,21 +10,24 @@
     </details>
     <details>
         <summary>Configurações</summary>
-        ...
+        <button id="btn_preference" onclick="open_close_preference()">preferencias</button>
+        
         
     </details>
 </div>
-
+<!-- Dica: os dois pontos faz procurar na pasta anterior podendo ate fazer um ../../ se nescessario -->
+<!-- 
+<script src="../main.js"></script> -->
 <style>
     #menu_div_bar{
         background-color: rgb(35, 35, 35);
         transition: 0,5s;
         height: 100%;
-        width: 35%;
+        width: 25%;
         position: fixed;
         z-index: 100;  /* seleciona a camada */
         top: 0;  /* deixa a div ocupar a tela inteira */
-        right: -35%;
+        right: -25%;
         
     }
     #menu_div_bar.active{
@@ -32,7 +35,7 @@
     }
 
     /* #btn_open, #btn_close{ */
-    #btn_open{
+    #btn_menu{
         right: 0;
         position: fixed;
         top: 0;
