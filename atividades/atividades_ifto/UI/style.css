@@ -1,79 +1,112 @@
 /* cor padrao  */
 :root{
-    --bg-color: rgb(254, 254, 254);
+    --bg-color: rgb(249, 249, 249);
+    --bg-btn-color: rgb(174, 254, 250);
+    --bg-menu-color: rgb(229, 229, 229);
     --text-color: rgb(0, 0, 0);
+    
 }
 
 /* variaveis para o tema escuro */
 body.dark_theme{
-    --bg-color: rgb(19, 19, 19);
+    --bg-body-color: rgb(19, 19, 19);
+    --bg-btn-color: rgb(68, 154, 150);
+    --bg-menu-color: rgb(55, 55, 55);
     --text-color: rgb(255, 255, 255);
 }
 
-/* =============================================================== */
-
-/* customiza a barra de menu */
-#menu_div_bar{
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: 0.5s;
-    height: 100%;
-    width: 25%;
-    position: fixed;
-    z-index: 100;  /* seleciona a camada */
-    top: 0;  /* deixa a div ocupar a tela inteira */
-    right: -25%;
-    
-}
-
-/* modifica a localização da div se ela estiver como ativa fazendo ela ficar visivel */
-#menu_div_bar.active{
-    right: 0;
-}
-
-/* butão de ativação da barra menu  */
-#btn_menu{
-    right: 0;
-    position: fixed;
-    top: 0;
-    z-index: 1000;
-
-    
-}
-
-/* =============================================================== */
-
-/* customiza a caixa de preferencia */
-#preference_div_box{
-    height: 75%;
-    width: 75%;
-    position: fixed;
-    justify-content: center; /*centradlizze essa div*/
-    align-items: center;
-    z-index: 1000;  /* seleciona a camada */
-    top: 0;  /* deixa a div ocupar a tela inteira */
-    /* right: -100%; */
-    left: -100%;
-}
-
-/* modifica a localização da div se ela estiver como ativa fazendo ela ficar visivel */
-#preference_div_box.active{
-    /* right: 0; */
-    left: 0;
-
-}
-
-/* botão que fecha a caixa de preferencias */
-#close_preference{
-    position: absolute;
-    right: 0;
-}
-
-/* =============================================================== */
-
 /* modifica a aparencia do site */
-body, button, #preference_div_box, #menu_div_bar{
-    background-color: var(--bg-color);
+/* body, button, #preference_div_box, #menu_div_bar{ */
+body{
+    /* ============================== body-color ================================= */
+    background-color: var(--bg-body-color);
     color: var(--text-color);
     transition: 0.3s;
+
+    /* ============================== menu ================================= */
+
+    /* customiza a barra de menu */
+    #menu_div_bar{
+        background-color: var(--bg-menu-color);
+        color: var(--text-color);
+        transition: 0.5s;
+        height: 100%;
+        width: 25%;
+        position: fixed;
+        z-index: 100;  /* seleciona a camada */
+        top: 0;  /* deixa a div ocupar a tela inteira */
+        right: -25%;
+    }
+
+    /* modifica a localização da div se ela estiver como ativa fazendo ela ficar visivel */
+    #menu_div_bar.active{
+        right: 0;
+    }
+
+    /* butão de ativação da barra menu  */
+    #btn_menu{
+        /* cor */
+        /* formato */
+        /* posição */
+        background-color: var(--bg-btn-color);
+        color: var(--text-color);
+        right: 0;
+        position: fixed;
+        top: 0;
+        z-index: 1000;
+        border-radius: 15%;
+        height: 30px;
+        width: 30px;
+        
+    }
+
+    /* =============================== preference ================================ */
+
+    /* customiza a caixa de preferencia */
+    #preference_div_box{
+        /* cor */
+        background-color: var(--bg-menu-color);
+        color: var(--text-color);
+
+        /* formato */
+        height: 75%;
+        width: 75%;
+
+        /* posição */
+        position: fixed;
+        justify-content: center; /*centradlizze essa div*/
+        align-items: center;
+        z-index: 1000;  /* seleciona a camada */
+        top: 0;  /* deixa a div ocupar a tela inteira */
+        /* right: -100%; */
+        left: -100%;
+    }
+
+    /* modifica a localização da div se ela estiver como ativa fazendo ela ficar visivel */
+    #preference_div_box.active{
+        /* right: 0; */
+        left: 0;
+
+    }
+
+    /* botão que fecha a caixa de preferencias */
+    #close_preference{
+        /* cor */
+
+        /* formato */
+        /* posição */
+        position: absolute;
+        right: 0;
+    }
+
+    button{
+        background-color:  var(--bg-btn-color);
+        color: var(--text-color);
+    }
+
+    .feke_txt{
+        background-color: rgba(240, 248, 255, 0);
+        color: var(--text-color);
+        border: none;
+    }
 }
