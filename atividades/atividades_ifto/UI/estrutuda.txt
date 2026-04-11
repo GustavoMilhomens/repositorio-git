@@ -35,6 +35,9 @@
 │   │       ├── ...
 │   │       └── 
 │   │
+│   ├── /test                                   (pasta isolada do site onde testa partes do sistema sem alterar significativamente o site )
+│   │   └── ...                                 (todos os testes são colocados depois em uma outra pasta separada chamada html/testes) 
+│   │
 │   ├── /...
 │   │   ├── ...
 │   │   └── 
@@ -44,7 +47,8 @@
 │       └── 
 │
 ├── /complementos
-│   ├── barra_menu.html                                 (O template do menu + CSS)
+│   ├── barra_menu.html                          (barra lateral do menu)
+│   ├── preferencia.html                         (caixa de preferencias onde pode customozar a aparencia do site)
 │   ├── ...
 │   └── ...
 │
