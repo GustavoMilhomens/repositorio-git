@@ -4,11 +4,11 @@ document.documentElement.lang="pt-br";
 //// procura o aqrqquivo de menu 
 async function include_complement() {
     // coleta o caminho do menu 
-    const menu_bar = await fetch('complementos/barra_menu.html');
+    const menu_bar = await fetch( relative_path + "complementos/barra_menu.html" );
     document.getElementById('menu_div').innerHTML = await menu_bar.text();
     
     // coleta o caminho da caxa de preferencias
-    const preference_box = await fetch('complementos/preferencias.html');
+    const preference_box = await fetch( relative_path + 'complementos/preferencias.html');
     document.getElementById('preference_div').innerHTML = await preference_box.text();
     
 }
@@ -51,4 +51,6 @@ async function start() {
         localStorage.setItem('theme', theme); 
     });
 }
+
 start();
+
