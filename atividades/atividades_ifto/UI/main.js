@@ -4,11 +4,11 @@ document.documentElement.lang="pt-br";
 //// procura o aqrqquivo de menu 
 async function include_complement() {
     // coleta o caminho do menu 
-    const menu_bar = await fetch("repositorio-git/atividades/atividades_ifto/UI/complementos/barra_menu.html");
+    const menu_bar = await fetch("/atividades/atividades_ifto/UI/complementos/barra_menu.html");
     document.getElementById('menu_div').innerHTML = await menu_bar.text();
     
     // coleta o caminho da caxa de preferencias
-    const preference_box = await fetch('repositorio-git/atividades/atividades_ifto/UI/complementos/preferencias.html');
+    const preference_box = await fetch('/atividades/atividades_ifto/UI/complementos/preferencias.html');
     document.getElementById('preference_div').innerHTML = await preference_box.text();
     
 }
