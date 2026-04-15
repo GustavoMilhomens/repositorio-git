@@ -140,14 +140,19 @@ body{
     nav{
         /* cor */
         background-color: rgb(94, 94, 94);
+
         /* formato */
-        border-bottom: #d5dade 2px dashed;
-        border-radius: 100% #d5dade;
-        height: 15%;
-        border-style:hidden;
+        width: 100%;
+        padding: 0.7%;
+        left: 0;
+        
+
+
         /* posição */
-        position: absolute;
+        position:fixed;
         top: 0;
+        
+        
         /* outros */
         
         
