@@ -1,7 +1,32 @@
-//// faz com que a linguagem fique em portugues 
+// faz com que a linguagem fique em portugues 
 document.documentElement.lang="pt-br";
 
-//// procura o aqrqquivo de menu 
+// adiciona o style e as divs, menu e preference, em todos os arquivos que receberem o main.js
+function add_element(){
+    //* add style 
+    const link = document.createElement('link'); //? cria uma variavel que recebe o elemento link
+    link.rel = 'stylesheet'; //? configura 
+    link.href = '/atividades/atividades_ifto/UI/style.css'; //? referencia o css
+    document.head.append(link); //? adiciona o elemento
+    //! o append() adiciona no final 
+
+    //* add div preference
+    const div_preference = document.createElement('div'); //? cria a varivel do elemento
+    div_preference.id = 'preference_div'; //? adiciona o id
+    document.body.prepend(div_preference); //? adiciona a div ao body 
+    //! o prepend() adiciona no inicio
+
+    //* add div menu
+    const div_menu = document.createElement('div'); 
+    div_menu.id = 'menu_div'; 
+    document.body.prepend(div_menu);
+
+    
+
+
+}
+
+// procura o arquivo de menu 
 async function include_complement() {
     // coleta o caminho do menu 
     const menu_bar = await fetch("/atividades/atividades_ifto/UI/complementos/barra_menu.html");
@@ -13,13 +38,13 @@ async function include_complement() {
     
 }
 
-//// abre e fecha o menu 
+// abre e fecha o menu 
 function open_close_menu(){
         const menu = document.getElementById('menu_div_bar');
         menu.classList.toggle('active') 
     }
 
-//// abre e fecha a caixa de preferencias 
+// abre e fecha a caixa de preferencias 
 function open_close_preference(){
         const prefe = document.getElementById('preference_div_box');
         prefe.classList.toggle('active') 
@@ -52,5 +77,7 @@ async function start() {
     });
 }
 
+// chama as funções
+add_element();
 start();
 
