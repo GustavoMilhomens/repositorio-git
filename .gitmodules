@@ -1,0 +1,6 @@
+[submodule "projetos/site_ed_financeira"]
+	path = projetos/site_ed_financeira
+	url = https://github.com/GustavoMilhomens/site_ed_financeira.git
+[submodule "projetos/SupaBase_teste"]
+	path = projetos/SupaBase_teste
+	url = https://github.com/GustavoMilhomens/SupaBase_teste.git
