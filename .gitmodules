@@ -4,6 +4,4 @@
 [submodule "projetos/SupaBase_teste"]
 	path = projetos/SupaBase_teste
 	url = https://github.com/GustavoMilhomens/SupaBase_teste.git
-[submodule "atividades/atividades_ifto/UI"]
-	path = atividades/atividades_ifto/UI
-	url = https://github.com/GustavoMilhomens/UI.git
+
