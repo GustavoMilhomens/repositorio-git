@@ -85,10 +85,10 @@ body{
         
     }
 
-    /* =============================== preference ================================ */
+    /* =============================== config ================================ */
 
     /* customiza a caixa de preferencia */
-    #preference_div_box{
+    #config_div_box{
         /* cor */
         background-color: var(--bg-menu-color);
         color: var(--text-color);
@@ -111,14 +111,14 @@ body{
     }
 
     /* modifica a localização da div se ela estiver como ativa fazendo ela ficar visivel */
-    #preference_div_box.active{
+    #config_div_box.active{
         /* remove a caixa de preferencia */
         display: block;
 
     }
 
     /* botão que fecha a caixa de preferencias */
-    #close_preference{
+    #close_config{
         /* cor */
 
         /* formato */

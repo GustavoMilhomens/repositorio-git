@@ -8,8 +8,8 @@ async function include_complement() {
     document.getElementById('menu_div').innerHTML = await menu_bar.text();
     
     // coleta o caminho da caxa de preferencias
-    const preference_box = await fetch('/atividades/atividades_ifto/UI/complementos/preferencias.html');
-    document.getElementById('preference_div').innerHTML = await preference_box.text();
+    const config_box = await fetch('/atividades/atividades_ifto/UI/complementos/preferencias.html');
+    document.getElementById('config_div').innerHTML = await config_box.text();
     
 }
 
@@ -20,8 +20,8 @@ function open_close_menu(){
     }
 
 //// abre e fecha a caixa de preferencias 
-function open_close_preference(){
-        const prefe = document.getElementById('preference_div_box');
+function open_close_config(){
+        const prefe = document.getElementById('config_div_box');
         prefe.classList.toggle('active') 
 }
 

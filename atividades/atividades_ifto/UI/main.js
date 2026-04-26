@@ -1,7 +1,7 @@
 // faz com que a linguagem fique em portugues 
 document.documentElement.lang="pt-br";
 
-// adiciona o style e as divs, menu e preference, em todos os arquivos que receberem o main.js
+// adiciona o style e as divs, menu e config, em todos os arquivos que receberem o main.js
 function add_element(){
     //* add style 
     const link = document.createElement('link'); //? cria uma variavel que recebe o elemento link
@@ -10,20 +10,16 @@ function add_element(){
     document.head.append(link); //? adiciona o elemento
     //! o append() adiciona no final 
 
-    //* add div preference
-    const div_preference = document.createElement('div'); //? cria a varivel do elemento
-    div_preference.id = 'preference_div'; //? adiciona o id
-    document.body.prepend(div_preference); //? adiciona a div ao body 
+    //* add div config
+    const div_config = document.createElement('div'); //? cria a varivel do elemento
+    div_config.id = 'config_div'; //? adiciona o id
+    document.body.prepend(div_config); //? adiciona a div ao body 
     //! o prepend() adiciona no inicio
 
     //* add div menu
     const div_menu = document.createElement('div'); 
     div_menu.id = 'menu_div'; 
     document.body.prepend(div_menu);
-
-    
-
-
 }
 
 // procura o arquivo de menu 
@@ -33,8 +29,8 @@ async function include_complement() {
     document.getElementById('menu_div').innerHTML = await menu_bar.text();
     
     // coleta o caminho da caxa de preferencias
-    const preference_box = await fetch('/atividades/atividades_ifto/UI/complementos/preferencias.html');
-    document.getElementById('preference_div').innerHTML = await preference_box.text();
+    const config_box = await fetch('/atividades/atividades_ifto/UI/complementos/configuracao.html');
+    document.getElementById('config_div').innerHTML = await config_box.text();
     
 }
 
@@ -45,8 +41,8 @@ function open_close_menu(){
     }
 
 // abre e fecha a caixa de preferencias 
-function open_close_preference(){
-        const prefe = document.getElementById('preference_div_box');
+function open_close_config(){
+        const prefe = document.getElementById('config_div_box');
         prefe.classList.toggle('active') 
 }
 
