@@ -1,0 +1,7 @@
+  
+    
+    
+    
+{"liveServer.settings.port": 5500,
+    "fiveServer.port": 5501,}
+    
