@@ -60,3 +60,11 @@ SEM_REVERSO   = "\033[27m"  # Remove reverso
 print(NEGRITO + AZUL + "Texto azul em negrito" + RESET)
 print(SUBLINHADO + VERMELHO + "Texto vermelho sublinhado" + RESET)
 print(REVERSO + AMARELO + "Texto amarelo reverso" + RESET)
+
+print('abcd\refgh') # \r remove o conteudo anterior deixando o ultimo antes no final
+print('abcd\tefgh') # \t da um espaçamento similar ao tab
+print('abcd\aefgh') # \a faz nada
+print('abcd\fefgh') # \f quebra a linha, como um enter, mas deixando a letra na mesma posição ao invez se jogala para o inicio
+print('abcd\vefgh') # \v masma cosa que o \f
+print('abcd\befgh') # \b remove a letra anterior ao \b
+print('abcd\nefgh') # \n quebra de linha
