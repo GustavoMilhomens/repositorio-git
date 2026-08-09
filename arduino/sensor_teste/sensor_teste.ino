@@ -8,11 +8,12 @@ int echo_pin = 6; // pino do echo do sensor
 int trig_pin = 7; // pino do trig do sensor
 
 
-int limite_distanc = 0; // limite de distancia
+int limite_distanc = 300; // limite de distancia
 int cm = 0; // centimetros
 
 long ler_distancia_sensor(int t_pin, int e_pin)
 {
+    
     pinMode(t_pin, OUTPUT); // determina o pino do trig/disparo do sensor como saida/output 
     digitalWrite(t_pin, LOW); // deixa o pino em nivel baixo/desligado
     delayMicroseconds(2); // espera de 2 microsegundos
@@ -37,7 +38,6 @@ void setup()
 
 void loop()
 {
-    limite_distanc = 50; // limite de destancia de 350cm
     cm = 0.01723 * ler_distancia_sensor( trig_pin , echo_pin); // converte o valor em centimetros com base nos microsegundos 
     Serial.print("cm: ");
     Serial.print(cm);
@@ -53,7 +53,7 @@ void loop()
 
     }
 
-    if (cm <= limite_distanc && cm > limite_distanc - 10) // se a distancia em cm for menor que o limite e maior que o limite - 100 não manda sinal ao led verde
+    if (cm <= limite_distanc && cm > limite_distanc * 0.5) // se a distancia em cm for menor que o limite e maior que o limite - 100 não manda sinal ao led verde
     {
         digitalWrite(led_verde, HIGH);
         digitalWrite(led_amarel, LOW);
@@ -62,29 +62,30 @@ void loop()
         digitalWrite(buzer_pin, HIGH);
         delay(100);
       	digitalWrite(buzer_pin, LOW);
-        delay(100);
+        delay(400);
     }
 
-    if (cm <= limite_distanc - 10 && cm > limite_distanc - 30 ) // se a distancia em cm for menor que o limite e maior que o limite - 100 não manda sinal ao led verde
+    if (cm <= limite_distanc * 0.5 && cm > limite_distanc * 0.2 ) // se a distancia em cm for menor que o limite e maior que o limite - 100 não manda sinal ao led verde
     {
         digitalWrite(led_verde, LOW);
         digitalWrite(led_amarel, HIGH);
         digitalWrite(led_verm, LOW);
 
         digitalWrite(buzer_pin, HIGH);
-        delay(400);
+        delay(100);
       	digitalWrite(buzer_pin, LOW);
+      	delay(200);
+
 
     }
 
-    if (cm <= limite_distanc - 30 && cm > limite_distanc - 50 ) // se a distancia em cm for menor que o limite e maior que o limite - 100 não manda sinal ao led verde
+    if (cm <= limite_distanc * 0.2 && cm > 0 ) // se a distancia em cm for menor que o limite e maior que o limite - 100 não manda sinal ao led verde
     {
         digitalWrite(led_verde, LOW);
         digitalWrite(led_amarel, LOW);
         digitalWrite(led_verm, HIGH );
 
         digitalWrite(buzer_pin, HIGH);
-        delay(800);
       	digitalWrite(buzer_pin, LOW);
 
     }
