@@ -14,6 +14,7 @@ void setup()
 
 void loop()
 {
+  
   digitalWrite(led_verd, HIGH);
   delay(1000); // Wait for 10 millisecond(s)
   digitalWrite(led_verd, LOW);

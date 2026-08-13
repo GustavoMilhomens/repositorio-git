@@ -8,7 +8,7 @@ int echo_pin = 6; // pino do echo do sensor
 int trig_pin = 7; // pino do trig do sensor
 
 
-int limite_distanc = 300; // limite de distancia
+int limite_distanc = 50; // limite de distancia
 int cm = 0; // centimetros
 
 long ler_distancia_sensor(int t_pin, int e_pin)
@@ -62,7 +62,7 @@ void loop()
         digitalWrite(buzer_pin, HIGH);
         delay(100);
       	digitalWrite(buzer_pin, LOW);
-        delay(400);
+        delay(800);
     }
 
     if (cm <= limite_distanc * 0.5 && cm > limite_distanc * 0.2 ) // se a distancia em cm for menor que o limite e maior que o limite - 100 não manda sinal ao led verde
@@ -74,19 +74,21 @@ void loop()
         digitalWrite(buzer_pin, HIGH);
         delay(100);
       	digitalWrite(buzer_pin, LOW);
-      	delay(200);
+      	delay(400);
 
 
     }
 
-    if (cm <= limite_distanc * 0.2 && cm > 0 ) // se a distancia em cm for menor que o limite e maior que o limite - 100 não manda sinal ao led verde
+    if (cm <= limite_distanc * 0.2 && cm >= 0 ) // se a distancia em cm for menor que o limite e maior que o limite - 100 não manda sinal ao led verde
     {
         digitalWrite(led_verde, LOW);
         digitalWrite(led_amarel, LOW);
         digitalWrite(led_verm, HIGH );
 
         digitalWrite(buzer_pin, HIGH);
+        delay(100);
       	digitalWrite(buzer_pin, LOW);
+        delay(50);
 
     }
 }
