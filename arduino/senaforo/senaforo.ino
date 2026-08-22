@@ -14,12 +14,10 @@ void setup()
 
 void loop()
 {
-  
   digitalWrite(led_verd, HIGH);
   delay(1000); // Wait for 10 millisecond(s)
   digitalWrite(led_verd, LOW);
   delay(1000);
-  
   
   digitalWrite(led_am, HIGH);
   delay(1000); // Wait for 10 millisecond(s)
