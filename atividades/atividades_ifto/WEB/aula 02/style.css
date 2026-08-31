@@ -1,12 +1,17 @@
 :root{
-    --background-color-body : rgb(73, 73, 73)
+    /** backgrouds */
+    --background-color-body : rgb(73, 73, 73);
+    --background-color-header: rgb(179, 179, 179);
+
+    /** text */
+    --text-color : rgb(231, 231, 231);
 }
 
 
 body{
     background-color: var(--background-color-body);
-    color: aliceblue;
+    color: var(--text-color);
 }
 header{
-    background-color: rgb(179, 179, 179);
+    background-color: var(--background-color-header);
 }
