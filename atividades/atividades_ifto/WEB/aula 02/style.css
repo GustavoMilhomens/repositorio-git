@@ -16,6 +16,5 @@ header{
     background-color: var(--background-color-header);
 }
 .header-img{
-    width: 5px;
-    height: 5px;
+    width: 50px;
 }
