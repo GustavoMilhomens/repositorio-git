@@ -1,6 +1,12 @@
+:root{
+    
+}
+
+
 body{
     background-color: rgb(73, 73, 73);
+    color: aliceblue;
 }
 header{
-    
+    background-color: rgb(179, 179, 179);
 }
