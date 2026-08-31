@@ -9,7 +9,7 @@
     </head>
     <body> <!--? corpo: parte que se pode interagir e visualizar, ""em outras palavras o corpo do site""  -->
         <header> <!--? cabeçalio: conteudo que fica no topo do site -->
-            <div class="header-container">
+            <div class="header-container"><!--? div: como se fosse conteiners que dividem os elementos  -->
                 <a href="#" class="logo" > <!--? ancora: é um link que leva para outro arquivo ou site -->
                     <img src="assets/image.png" alt="imagem inesistente" class="header-img"> <!--? imagem: adiciona uma imagem ao arquivo -->
                     
@@ -19,11 +19,18 @@
                     </span>
                 </a>
                 <nav class="main-nav"> <!--? nav: tagsemantica para o menu de navegação -->
-                    <a href="index.html" class="nav-link">Início</a>
+                    <a href="index.html" class="nav-link active">Início</a>
                     <a href="cursos.html" class="nav-link">Cursos</a>
                     <a href="sobre.html" class="nav-link">Sobre</a>
                     <a href="contato.html" class="nav-link">Contato</a>
                 </nav>
+            </div>
+            <div class="header-actions">
+                <!--* Agrupa os butões de busca CTA -->
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar cursos..."> <!--? input: recebe dados -->
+                    
+                </div>
             </div>
         </header>
         <main> <!--? meu: conteudo principal do site -->

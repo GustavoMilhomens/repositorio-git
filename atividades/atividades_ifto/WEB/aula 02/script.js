@@ -7,4 +7,5 @@ async function add_element() {
     link.rel = 'stylesheet'; //? configura 
     link.href = base + '/style.css'; //? referencia o css
     document.head.append(link); //? adiciona o elemento
+    
 }
