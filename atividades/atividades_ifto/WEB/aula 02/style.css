@@ -1,19 +1,28 @@
 :root{
+    /* paleta de cor */
+    --color-primary : #4F46E5;
+    --color-primary-darck : #4339CA;
+    --color-text : #242424;
+    --color-text-light : rgb(211, 211, 211);
+    --color-bg : rgb(1,1,1);
+    
+    /* font */
+    --font-main : 'inter' , sans-serif;
+
     /** backgrouds */
     --background-color-body : rgb(73, 73, 73);
     --background-color-header: rgb(179, 179, 179);
 
     /** text */
     --text-color : rgb(231, 231, 231);
+    /* para asessar as fonts https://fonts.google.com/ */
 }
 
-body.darck_mode{
-/** backgrouds */
-    --background-color-body : rgb(73, 73, 73);
-    --background-color-header: rgb(179, 179, 179);
-
-    /** text */
-    --text-color : rgb(231, 231, 231);
+* {
+    /* reset do espaçamento */
+    margin: 0; /* espaçamento externo  */
+    padding: 0; /* espaçamento interno */
+    box-sizing: border-box;
 }
 
 body{
