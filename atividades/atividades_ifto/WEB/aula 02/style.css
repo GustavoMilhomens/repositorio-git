@@ -3,9 +3,9 @@
     --color-primary : #4F46E5;
     --color-primary-darck : #4339CA;
     --color-text : #242424;
-    --color-text-light : #d3d3d3;
+    --color-text-light : #646464;
     --color-border: #c2c2c2;
-    --color-bg : #8d8d8d;
+    --color-bg : #afafaf;
     
     /* font */
     --font-main : 'inter' , sans-serif;
@@ -82,3 +82,81 @@ header{
     font-weight: 400;
     color: var(--color-text-light);
 }
+
+.main-nav{
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.nav-link{
+    text-decoration: none;
+    font-weight: 500;
+    color: var(--color-text);
+    transition: color 0.2s ease;
+
+}
+
+.nav-link:hover{
+    color: var(--color-text-light)
+}
+
+.nav-link.active{
+    color: var(--color-primary);
+    font-weight: 600;
+
+}
+
+.header-actions{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.search-box{
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-box input{
+    font-family: var(--font-main);
+    width: 220px;
+    padding: 10px 40px 10px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px ;
+    font-size: 14px;
+    outline: none;
+
+}
+
+.search-box input:focus{
+    border-color: var(--color-primary) ;
+}
+
+.search-box input::placeholder{
+    color: var(--color-text-light);
+}
+
+.search-icon{
+    position: absolute;
+    right: 14px;
+    width: 25px;
+    fill: var(--color-text-light);  /* altera a cor se a imgem for svg */
+    pointer-events: none;
+    /* impede que quando interagir como o imput ele seja ativado */
+}
+
+.btn-primary{
+    font-family: var(--font-main);
+    background-color: var(--color-primary);
+    color:#afafaf;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
