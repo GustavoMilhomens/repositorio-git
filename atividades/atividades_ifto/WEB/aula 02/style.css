@@ -1,20 +1,162 @@
 :root{
-    /** backgrouds */
+    /* paleta de cor */
+    --color-primary : #4F46E5;
+    --color-primary-darck : #4339CA;
+    --color-text : #242424;
+    --color-text-light : #646464;
+    --color-border: #c2c2c2;
+    --color-bg : #afafaf;
+    
+    /* font */
+    --font-main : 'inter' , sans-serif;
+    /* para asessar as fonts https://fonts.google.com/ */
+
+    
+    /* * backgrouds
     --background-color-body : rgb(73, 73, 73);
     --background-color-header: rgb(179, 179, 179);
 
-    /** text */
-    --text-color : rgb(231, 231, 231);
+    /** text 
+    --text-color : rgb(231, 231, 231); */
+
 }
 
+* {
+    /* reset do espaçamento */
+    margin: 0; /* espaçamento externo  */
+    padding: 0; /* espaçamento interno */
+    box-sizing: border-box;
+}
 
 body{
     background-color: var(--background-color-body);
     color: var(--text-color);
+    font-family: var(--font-main);
 }
+
 header{
-    background-color: var(--background-color-header);
+    width: 100%;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(color);
+    position: sticky; /* fica fixo no topo da pagina  */
+    top: 0; /* garante que o header vai estar no topo */
+    z-index: 100; /* camada do elemento  */
 }
-.header-img{
-    width: 50px;
+
+.header-container{
+    max-width: 1200px; /* maximo de largura */
+    margin: 0 auto; /* centraliza na pagina  */
+    padding: 16px 24px;
+    display: flex; /* oeganiza os elementos de lado a lado ao inves de um em cima e outro em baixo*/
+    align-items: center; /* centralista vertica~mente */
+    justify-content: space-between; /* distribui igualente os elementos colocando os links na ponta  */
+    gap: 24px; /* espaço entre os elementos  */
 }
+
+.logo{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+/* atribui a todas a imagens que estiverem dentro de um elemento com classe .logo */
+.logo img{
+    width: 40px;
+    object-fit: contain; /* mantem o tamanho da imagem */
+}
+
+.logo-text{
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-title{
+    font-size: 16px; /* tamanho da fonte*/
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.logo-subtitle{
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--color-text-light);
+}
+
+.main-nav{
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.nav-link{
+    text-decoration: none;
+    font-weight: 500;
+    color: var(--color-text);
+    transition: color 0.2s ease;
+
+}
+
+.nav-link:hover{
+    color: var(--color-text-light)
+}
+
+.nav-link.active{
+    color: var(--color-primary);
+    font-weight: 600;
+
+}
+
+.header-actions{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.search-box{
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-box input{
+    font-family: var(--font-main);
+    width: 220px;
+    padding: 10px 40px 10px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px ;
+    font-size: 14px;
+    outline: none;
+
+}
+
+.search-box input:focus{
+    border-color: var(--color-primary) ;
+}
+
+.search-box input::placeholder{
+    color: var(--color-text-light);
+}
+
+.search-icon{
+    position: absolute;
+    right: 14px;
+    width: 25px;
+    fill: var(--color-text-light);  /* altera a cor se a imgem for svg */
+    pointer-events: none;
+    /* impede que quando interagir como o imput ele seja ativado */
+}
+
+.btn-primary{
+    font-family: var(--font-main);
+    background-color: var(--color-primary);
+    color:#afafaf;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
