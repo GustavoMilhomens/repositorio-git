@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Editor de cores SVG</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#eef0f3;--pn:#fff;--tb:#fff;--tx:#1f2430;--mt:#6b7684;--bd:#d9dbe0;--ac:#2f6fed;--ws:#cfd3da;--hv:#eef1f6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17191d;--pn:#23262c;--tb:#1d2025;--tx:#e6e9ee;--mt:#98a2b0;--bd:#343940;--ac:#6c9bff;--ws:#15171a;--hv:#2e323a}}
+:root[data-theme="dark"]{--bg:#17191d;--pn:#23262c;--tb:#1d2025;--tx:#e6e9ee;--mt:#98a2b0;--bd:#343940;--ac:#6c9bff;--ws:#15171a;--hv:#2e323a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}html,body{height:100%}
+*,*:before,*:after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:13px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+#app{position:relative;height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto;grid-template-columns:230px minmax(0,1fr) 292px}
+#top{grid-column:1/-1;display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--tb);border-bottom:1px solid var(--bd);overflow-x:auto;white-space:nowrap}
+#bar{grid-column:1/-1;display:flex;gap:14px;padding:4px 10px;background:var(--tb);border-top:1px solid var(--bd);color:var(--mt);font-size:12px;overflow:hidden;white-space:nowrap}
+#bar #status{color:var(--tx);overflow:hidden;text-overflow:ellipsis}
+.panel{background:var(--pn);overflow:auto;min-height:0}#left{border-right:1px solid var(--bd)}#right{border-left:1px solid var(--bd)}
+.brand{font-weight:700;margin-right:6px}.sep{width:1px;height:20px;background:var(--bd);margin:0 4px}.grow{flex:1}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+button,label.btn{font:inherit;color:var(--tx);background:var(--pn);border:1px solid var(--bd);border-radius:6px;padding:4px 9px;cursor:pointer;display:inline-flex;align-items:center}
+button:hover,label.btn:hover{background:var(--hv)}button.on{border-color:var(--ac);color:var(--ac);font-weight:600}button:disabled{opacity:.45;cursor:default}
+.pri{background:var(--ac)!important;border-color:var(--ac)!important;color:#fff!important}
+#stage{position:relative;overflow:auto;display:flex;padding:28px;background:var(--ws);background-image:radial-gradient(rgba(128,128,128,.18) 1px,transparent 1px);background-size:18px 18px}
+#stage.drag{outline:3px dashed var(--ac);outline-offset:-8px}
+#wrap{position:relative;margin:auto;width:max-content;box-shadow:0 3px 18px rgba(0,0,0,.35);
+background-color:#fff;background-image:linear-gradient(45deg,#e6e6e6 25%,transparent 25%,transparent 75%,#e6e6e6 75%),linear-gradient(45deg,#e6e6e6 25%,transparent 25%,transparent 75%,#e6e6e6 75%);background-size:16px 16px;background-position:0 0,8px 8px}
+#wrap.w{background:#fff}#wrap.d{background:#12161c}
+#wrap svg{display:block;height:auto;cursor:pointer;touch-action:none}
+#empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+#empty .card{pointer-events:auto;text-align:center;background:var(--pn);border:1px dashed var(--bd);border-radius:14px;padding:34px 38px;max-width:420px;display:flex;flex-direction:column;gap:10px;align-items:center}
+#sel{position:absolute;pointer-events:none;border:1px solid var(--ac);display:none}
+#sel .h{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;background:#fff;border:1.5px solid var(--ac);pointer-events:auto}
+.o{position:absolute;pointer-events:none;border:1px solid var(--ac);opacity:.8}
+details{border-bottom:1px solid var(--bd)}summary{cursor:pointer;padding:9px 12px;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mt);user-select:none}
+details>div{padding:0 12px 12px}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.muted{color:var(--mt);font-size:12px}#nm{font-weight:600;word-break:break-all}
+input[type=color]{width:34px;height:28px;padding:0;border:1px solid var(--bd);border-radius:6px;background:none;cursor:pointer}
+input[type=text],input[type=number]{font:inherit;padding:4px 6px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--tx)}
+input[type=text]{width:84px}input[type=number]{width:70px}
+label.k{width:68px;font-size:12px;color:var(--mt)}
+.pal{display:flex;flex-wrap:wrap;gap:5px}.pal input{width:30px;height:30px}
+textarea{width:100%;height:100px;font:11px ui-monospace,Menlo,monospace;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:6px;padding:6px}
+#paste{display:none;position:absolute;top:44px;left:10px;z-index:9;width:min(520px,92vw);background:var(--pn);border:1px solid var(--bd);border-radius:10px;padding:10px;box-shadow:0 8px 28px rgba(0,0,0,.35)}
+#layers{padding:4px 0}.ly{display:flex;align-items:center;gap:6px;padding:3px 8px;cursor:pointer;white-space:nowrap}.ly:hover{background:var(--hv)}.ly.on{background:var(--ac);color:#fff}
+.ly span{overflow:hidden;text-overflow:ellipsis}.ly i{width:12px;height:12px;border-radius:3px;border:1px solid rgba(128,128,128,.5);flex:none}.ly b{margin-left:auto;opacity:.6;font-weight:400}.ly.off span{opacity:.4}
+@media(max-width:880px){body{overflow:auto}#app{height:auto;display:block}#stage{height:62vh}.panel{border:0;border-top:1px solid var(--bd)}}
+</style></head><body><div id="app">
+<header id="top">
+<b class="brand">◧ Editor SVG</b>
+<label class="btn pri" id="open" for="file">Abrir arquivo…</label><input type="file" id="file" class="vh" accept=".svg,image/svg+xml,image/png,image/jpeg,image/webp">
+<button id="pastebtn">Colar código</button><button id="demo">Exemplo</button>
+<span class="sep"></span><button id="undo" disabled>↶ Desfazer</button><span class="sep"></span>
+<span class="muted">Fundo</span><button data-bg="" class="on">Xadrez</button><button data-bg="w">Branco</button><button data-bg="d">Escuro</button>
+<span class="sep"></span><span class="muted">Zoom</span><input type="range" id="zoom" min="10" max="400" value="100"><span class="muted" id="zv">100%</span><button id="fit">Ajustar</button>
+<span class="grow"></span><span class="muted" id="msg"></span><button id="copy" disabled>Copiar código</button><button id="save" disabled class="pri">Salvar .svg</button>
+</header>
+<div id="paste"><textarea id="pta" placeholder="Cole aqui o código &lt;svg&gt;…"></textarea><div class="row"><button id="load" class="pri">Carregar código</button></div></div>
+
+<aside id="left" class="panel">
+<details open><summary>Camadas</summary><div style="padding:0"><div id="layers"><div class="muted" style="padding:6px 12px">Abra um arquivo para ver as camadas.</div></div></div></details>
+<details open><summary>Cores do arquivo</summary><div><div class="pal" id="pal"><span class="muted">Abra um SVG para ver as cores.</span></div></div></details>
+</aside>
+
+<main id="stage"><div id="wrap"><div id="sel"></div></div>
+<div id="empty"><div class="card"><div style="font-size:16px;font-weight:600">Abra um arquivo para começar</div>
+<div class="muted">SVG, PNG, JPG ou WebP. Você também pode arrastar o arquivo para cá, colar com Ctrl+V ou usar “Colar código”.</div>
+<label class="btn pri" for="file">Selecionar arquivo do dispositivo</label></div></div></main>
+
+<aside id="right" class="panel">
+<details open><summary>Seleção e cor</summary><div>
+<div id="nm">Nenhum elemento</div><div class="muted" id="kind">Clique no desenho</div>
+<div class="row"><label class="k">Preenchim.</label><input type="color" id="fc" disabled><input type="text" id="fh" disabled><label class="muted"><input type="checkbox" id="fn" disabled> nenhum</label></div>
+<div class="row"><label class="k">Contorno</label><input type="color" id="sc" disabled><input type="text" id="sh" disabled><label class="muted"><input type="checkbox" id="sn" disabled> nenhum</label></div>
+<div class="row"><button id="up" disabled>↑ Grupo pai</button><button id="del" disabled>Excluir</button></div>
+<div class="muted" id="note" style="margin-top:6px"></div></div></details>
+<details open><summary>Tamanho do elemento</summary><div>
+<div class="row"><input type="number" id="tw" min="0" step="any" disabled><span class="muted">×</span><input type="number" id="th" min="0" step="any" disabled><label class="muted"><input type="checkbox" id="tl" checked> proporção</label></div>
+<div class="row"><button id="m10" disabled>−10%</button><button id="p10" disabled>+10%</button><span class="muted">Contorno</span><input type="number" id="sw" min="0" step="any" disabled></div></div></details>
+<details><summary>Tamanho do arquivo</summary><div>
+<div class="row"><input type="number" id="dw" min="1" step="any"><span class="muted">×</span><input type="number" id="dh" min="1" step="any"><label class="muted"><input type="checkbox" id="dl" checked> proporção</label></div>
+<div class="row"><button id="da" disabled>Aplicar</button><span class="muted">Define width/height do arquivo.</span></div></div></details>
+<details><summary>Vetorizar (imagem → SVG)</summary><div>
+<div class="muted">Converte o desenho atual, inclusive PNG/JPG, em formas vetoriais editáveis.</div>
+<div class="row"><span class="muted">Cores</span><input type="range" id="tc" min="2" max="32" value="8"><span class="muted" id="tcv">8</span></div>
+<div class="row"><span class="muted">Suavizar</span><input type="range" id="tb" min="0" max="5" value="1"><span class="muted" id="tbv">1</span></div>
+<div class="row"><span class="muted">Mesclar cores</span><input type="range" id="tm" min="0" max="120" value="60"><span class="muted" id="tmv">60</span></div>
+<div class="row"><span class="muted">Detalhe mín.</span><input type="range" id="tp" min="0" max="100" value="12"><span class="muted" id="tpv">12</span></div>
+<div class="row"><label class="muted"><input type="checkbox" id="tbg" checked> remover fundo</label><label class="muted"><input type="checkbox" id="tgr" checked> agrupar em objetos</label></div>
+<div class="row"><button id="trace" disabled class="pri">Vetorizar</button></div></div></details>
+<details><summary>Formato para web</summary><div>
+<label class="muted"><input type="checkbox" id="web"> Exportar com variáveis CSS (cor e tamanho editáveis no código)</label>
+<textarea id="use" readonly style="height:130px;margin-top:8px" placeholder="Ative a opção acima para ver como editar cores e tamanho no CSS."></textarea></div></details>
+<details><summary>Código SVG</summary><div><textarea id="out" readonly></textarea><div class="muted" id="warn" style="color:#e2711d;margin-top:6px"></div></div></details>
+</aside>
+
+<footer id="bar"><span id="status"></span><span class="grow"></span><span>Shift+clique: vários · Arrastar: mover · Alças: redimensionar · Duplo clique: peça do grupo · Delete: excluir · Ctrl+scroll: zoom</span></footer>
+</div>
+<script>
+/*
+	imagetracer.js version 1.2.6
+	Simple raster image tracer and vectorizer written in JavaScript.
+	andras@jankovics.net
+*/
+
+/*
+
+The Unlicense / PUBLIC DOMAIN
+
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to http://unlicense.org/
+
+*/
+
+(function(){ 'use strict';
+
+function ImageTracer(){
+	var _this = this;
+
+	this.versionnumber = '1.2.6',
+	
+	////////////////////////////////////////////////////////////
+	//
+	//  API
+	//
+	////////////////////////////////////////////////////////////
+	
+	// Loading an image from a URL, tracing when loaded,
+	// then executing callback with the scaled svg string as argument
+	this.imageToSVG = function( url, callback, options ){
+		options = _this.checkoptions(options);
+		// loading image, tracing and callback
+		_this.loadImage(
+			url,
+			function(canvas){
+				callback(
+					_this.imagedataToSVG( _this.getImgdata(canvas), options )
+				);
+			},
+			options
+		);
+	},// End of imageToSVG()
+	
+	// Tracing imagedata, then returning the scaled svg string
+	this.imagedataToSVG = function( imgd, options ){
+		options = _this.checkoptions(options);
+		// tracing imagedata
+		var td = _this.imagedataToTracedata( imgd, options );
+		// returning SVG string
+		return _this.getsvgstring(td, options);
+	},// End of imagedataToSVG()
+	
+	// Loading an image from a URL, tracing when loaded,
+	// then executing callback with tracedata as argument
+	this.imageToTracedata = function( url, callback, options ){
+		options = _this.checkoptions(options);
+		// loading image, tracing and callback
+		_this.loadImage(
+				url,
+				function(canvas){
+					callback(
+						_this.imagedataToTracedata( _this.getImgdata(canvas), options )
+					);
+				},
+				options
+		);
+	},// End of imageToTracedata()
+	
+	// Tracing imagedata, then returning tracedata (layers with paths, palette, image size)
+	this.imagedataToTracedata = function( imgd, options ){
+		options = _this.checkoptions(options);
+		
+		// 1. Color quantization
+		var ii = _this.colorquantization( imgd, options );
+		
+		if(options.layering === 0){// Sequential layering
+			
+			// create tracedata object
+			var tracedata = {
+				layers : [],
+				palette : ii.palette,
+				width : ii.array[0].length-2,
+				height : ii.array.length-2
+			};
+			
+			// Loop to trace each color layer
+			for(var colornum=0; colornum<ii.palette.length; colornum++){
+				
+				// layeringstep -> pathscan -> internodes -> batchtracepaths
+				var tracedlayer =
+					_this.batchtracepaths(
+							
+						_this.internodes(
+								
+							_this.pathscan(
+								_this.layeringstep( ii, colornum ),
+								options.pathomit
+							),
+							
+							options
+							
+						),
+						
+						options.ltres,
+						options.qtres
+						
+					);
+				
+				// adding traced layer
+				tracedata.layers.push(tracedlayer);
+				
+			}// End of color loop
+			
+		}else{// Parallel layering
+			// 2. Layer separation and edge detection
+			var ls = _this.layering( ii );
+			
+			// Optional edge node visualization
+			if(options.layercontainerid){ _this.drawLayers( ls, _this.specpalette, options.scale, options.layercontainerid ); }
+			
+			// 3. Batch pathscan
+			var bps = _this.batchpathscan( ls, options.pathomit );
+			
+			// 4. Batch interpollation
+			var bis = _this.batchinternodes( bps, options );
+			
+			// 5. Batch tracing and creating tracedata object
+			var tracedata = {
+				layers : _this.batchtracelayers( bis, options.ltres, options.qtres ),
+				palette : ii.palette,
+				width : imgd.width,
+				height : imgd.height
+			};
+			
+		}// End of parallel layering
+		
+		// return tracedata
+		return tracedata;
+		
+	},// End of imagedataToTracedata()
+	
+	this.optionpresets = {
+		'default': {
+			
+			// Tracing
+			corsenabled : false,
+			ltres : 1,
+			qtres : 1,
+			pathomit : 8,
+			rightangleenhance : true,
+			
+			// Color quantization
+			colorsampling : 2,
+			numberofcolors : 16,
+			mincolorratio : 0,
+			colorquantcycles : 3,
+			
+			// Layering method
+			layering : 0,
+			
+			// SVG rendering
+			strokewidth : 1,
+			linefilter : false,
+			scale : 1,
+			roundcoords : 1,
+			viewbox : false,
+			desc : false,
+			lcpr : 0,
+			qcpr : 0,
+			
+			// Blur
+			blurradius : 0,
+			blurdelta : 20
+			
+		},
+		'posterized1': { colorsampling:0, numberofcolors:2 },
+		'posterized2': { numberofcolors:4, blurradius:5 },
+		'curvy': { ltres:0.01, linefilter:true, rightangleenhance:false },
+		'sharp': { qtres:0.01, linefilter:false },
+		'detailed': { pathomit:0, roundcoords:2, ltres:0.5, qtres:0.5, numberofcolors:64 },
+		'smoothed': { blurradius:5, blurdelta: 64 },
+		'grayscale': { colorsampling:0, colorquantcycles:1, numberofcolors:7 },
+		'fixedpalette': { colorsampling:0, colorquantcycles:1, numberofcolors:27 },
+		'randomsampling1': { colorsampling:1, numberofcolors:8 },
+		'randomsampling2': { colorsampling:1, numberofcolors:64 },
+		'artistic1': { colorsampling:0, colorquantcycles:1, pathomit:0, blurradius:5, blurdelta: 64, ltres:0.01, linefilter:true, numberofcolors:16, strokewidth:2 },
+		'artistic2': { qtres:0.01, colorsampling:0, colorquantcycles:1, numberofcolors:4, strokewidth:0 },
+		'artistic3': { qtres:10, ltres:10, numberofcolors:8 },
+		'artistic4': { qtres:10, ltres:10, numberofcolors:64, blurradius:5, blurdelta: 256, strokewidth:2 },
+		'posterized3': { ltres: 1, qtres: 1, pathomit: 20, rightangleenhance: true, colorsampling: 0, numberofcolors: 3,
+			mincolorratio: 0, colorquantcycles: 3, blurradius: 3, blurdelta: 20, strokewidth: 0, linefilter: false,
+			roundcoords: 1, pal: [ { r: 0, g: 0, b: 100, a: 255 }, { r: 255, g: 255, b: 255, a: 255 } ] }
+	},// End of optionpresets
+	
+	// creating options object, setting defaults for missing values
+	this.checkoptions = function(options){
+		options = options || {};
+		// Option preset
+		if(typeof options === 'string'){
+			options = options.toLowerCase();
+			if( _this.optionpresets[options] ){ options = _this.optionpresets[options]; }else{ options = {}; }
+		}
+		// Defaults
+		var ok = Object.keys(_this.optionpresets['default']);
+		for(var k=0; k<ok.length; k++){
+			if(!options.hasOwnProperty(ok[k])){ options[ok[k]] = _this.optionpresets['default'][ok[k]]; }
+		}
+		// options.pal is not defined here, the custom palette should be added externally: options.pal = [ { 'r':0, 'g':0, 'b':0, 'a':255 }, {...}, ... ];
+		// options.layercontainerid is not defined here, can be added externally: options.layercontainerid = 'mydiv'; ... <div id="mydiv"></div>
+		return options;
+	},// End of checkoptions()
+	
+	////////////////////////////////////////////////////////////
+	//
+	//  Vectorizing functions
+	//
+	////////////////////////////////////////////////////////////
+	
+	// 1. Color quantization
+	// Using a form of k-means clustering repeatead options.colorquantcycles times. http://en.wikipedia.org/wiki/Color_quantization
+	this.colorquantization = function( imgd, options ){
+		var arr = [], idx=0, cd,cdl,ci, paletteacc = [], pixelnum = imgd.width * imgd.height, i, j, k, cnt, palette;
+		
+		// imgd.data must be RGBA, not just RGB
+		if( imgd.data.length < pixelnum * 4 ){
+			var newimgddata = new Uint8ClampedArray(pixelnum * 4);
+			for(var pxcnt = 0; pxcnt < pixelnum ; pxcnt++){
+				newimgddata[pxcnt*4  ] = imgd.data[pxcnt*3  ];
+				newimgddata[pxcnt*4+1] = imgd.data[pxcnt*3+1];
+				newimgddata[pxcnt*4+2] = imgd.data[pxcnt*3+2];
+				newimgddata[pxcnt*4+3] = 255;
+			}
+			imgd.data = newimgddata;
+		}// End of RGBA imgd.data check
+		
+		// Filling arr (color index array) with -1
+		for( j=0; j<imgd.height+2; j++ ){ arr[j]=[]; for(i=0; i<imgd.width+2 ; i++){ arr[j][i] = -1; } }
+		
+		// Use custom palette if pal is defined or sample / generate custom length palette
+		if(options.pal){
+			palette = options.pal;
+		}else if(options.colorsampling === 0){
+			palette = _this.generatepalette(options.numberofcolors);
+		}else if(options.colorsampling === 1){
+			palette = _this.samplepalette( options.numberofcolors, imgd );
+		}else{
+			palette = _this.samplepalette2( options.numberofcolors, imgd );
+		}
+		
+		// Selective Gaussian blur preprocessing
+		if( options.blurradius > 0 ){ imgd = _this.blur( imgd, options.blurradius, options.blurdelta ); }
+		
+		// Repeat clustering step options.colorquantcycles times
+		for( cnt=0; cnt < options.colorquantcycles; cnt++ ){
+			
+			// Average colors from the second iteration
+			if(cnt>0){
+				// averaging paletteacc for palette
+				for( k=0; k < palette.length; k++ ){
+					
+					// averaging
+					if( paletteacc[k].n > 0 ){
+						palette[k] = {  r: Math.floor( paletteacc[k].r / paletteacc[k].n ),
+										g: Math.floor( paletteacc[k].g / paletteacc[k].n ),
+										b: Math.floor( paletteacc[k].b / paletteacc[k].n ),
+										a:  Math.floor( paletteacc[k].a / paletteacc[k].n ) };
+					}
+					
+					// Randomizing a color, if there are too few pixels and there will be a new cycle
+					if( ( paletteacc[k].n/pixelnum < options.mincolorratio ) && ( cnt < options.colorquantcycles-1 ) ){
+						palette[k] = {  r: Math.floor(Math.random()*255),
+										g: Math.floor(Math.random()*255),
+										b: Math.floor(Math.random()*255),
+										a: Math.floor(Math.random()*255) };
+					}
+					
+				}// End of palette loop
+			}// End of Average colors from the second iteration
+			
+			// Reseting palette accumulator for averaging
+			for( i=0; i < palette.length; i++ ){ paletteacc[i] = { r:0, g:0, b:0, a:0, n:0 }; }
+			
+			// loop through all pixels
+			for( j=0; j < imgd.height; j++ ){
+				for( i=0; i < imgd.width; i++ ){
+					
+					// pixel index
+					idx = (j*imgd.width+i)*4;
+					
+					// find closest color from palette by measuring (rectilinear) color distance between this pixel and all palette colors
+					ci=0; cdl = 1024; // 4 * 256 is the maximum RGBA distance
+					for( k=0; k<palette.length; k++ ){
+						
+						// In my experience, https://en.wikipedia.org/wiki/Rectilinear_distance works better than https://en.wikipedia.org/wiki/Euclidean_distance
+						cd = Math.abs(palette[k].r-imgd.data[idx]) + Math.abs(palette[k].g-imgd.data[idx+1]) + Math.abs(palette[k].b-imgd.data[idx+2]) + Math.abs(palette[k].a-imgd.data[idx+3]);
+						
+						// Remember this color if this is the closest yet
+						if(cd<cdl){ cdl = cd; ci = k; }
+						
+					}// End of palette loop
+					
+					// add to palettacc
+					paletteacc[ci].r += imgd.data[idx  ];
+					paletteacc[ci].g += imgd.data[idx+1];
+					paletteacc[ci].b += imgd.data[idx+2];
+					paletteacc[ci].a += imgd.data[idx+3];
+					paletteacc[ci].n++;
+					
+					// update the indexed color array
+					arr[j+1][i+1] = ci;
+					
+				}// End of i loop
+			}// End of j loop
+			
+		}// End of Repeat clustering step options.colorquantcycles times
+		
+		return { array:arr, palette:palette };
+		
+	},// End of colorquantization()
+	
+	// Sampling a palette from imagedata
+	this.samplepalette = function( numberofcolors, imgd ){
+		var idx, palette=[];
+		for(var i=0; i<numberofcolors; i++){
+			idx = Math.floor( Math.random() * imgd.data.length / 4 ) * 4;
+			palette.push({ r:imgd.data[idx  ], g:imgd.data[idx+1], b:imgd.data[idx+2], a:imgd.data[idx+3] });
+		}
+		return palette;
+	},// End of samplepalette()
+	
+	// Deterministic sampling a palette from imagedata: rectangular grid
+	this.samplepalette2 = function( numberofcolors, imgd ){
+		var idx, palette=[], ni = Math.ceil(Math.sqrt(numberofcolors)), nj = Math.ceil(numberofcolors/ni),
+			vx = imgd.width / (ni+1), vy = imgd.height / (nj+1);
+		for(var j=0; j<nj; j++){
+			for(var i=0; i<ni; i++){
+				if(palette.length === numberofcolors){
+					break;
+				}else{
+					idx = Math.floor( ((j+1)*vy) * imgd.width + ((i+1)*vx) ) * 4;
+					palette.push( { r:imgd.data[idx], g:imgd.data[idx+1], b:imgd.data[idx+2], a:imgd.data[idx+3] } );
+				}
+			}
+		}
+		return palette;
+	},// End of samplepalette2()
+	
+	// Generating a palette with numberofcolors
+	this.generatepalette = function(numberofcolors){
+		var palette = [], rcnt, gcnt, bcnt;
+		if(numberofcolors<8){
+			
+			// Grayscale
+			var graystep = Math.floor(255/(numberofcolors-1));
+			for(var i=0; i<numberofcolors; i++){ palette.push({ r:i*graystep, g:i*graystep, b:i*graystep, a:255 }); }
+			
+		}else{
+			
+			// RGB color cube
+			var colorqnum = Math.floor(Math.pow(numberofcolors, 1/3)), // Number of points on each edge on the RGB color cube
+				colorstep = Math.floor(255/(colorqnum-1)), // distance between points
+				rndnum = numberofcolors - colorqnum*colorqnum*colorqnum; // number of random colors
+			
+			for(rcnt=0; rcnt<colorqnum; rcnt++){
+				for(gcnt=0; gcnt<colorqnum; gcnt++){
+					for(bcnt=0; bcnt<colorqnum; bcnt++){
+						palette.push( { r:rcnt*colorstep, g:gcnt*colorstep, b:bcnt*colorstep, a:255 } );
+					}// End of blue loop
+				}// End of green loop
+			}// End of red loop
+			
+			// Rest is random
+			for(rcnt=0; rcnt<rndnum; rcnt++){ palette.push({ r:Math.floor(Math.random()*255), g:Math.floor(Math.random()*255), b:Math.floor(Math.random()*255), a:Math.floor(Math.random()*255) }); }
+
+		}// End of numberofcolors check
+		
+		return palette;
+	},// End of generatepalette()
+		
+	// 2. Layer separation and edge detection
+	// Edge node types ( ▓: this layer or 1; ░: not this layer or 0 )
+	// 12  ░░  ▓░  ░▓  ▓▓  ░░  ▓░  ░▓  ▓▓  ░░  ▓░  ░▓  ▓▓  ░░  ▓░  ░▓  ▓▓
+	// 48  ░░  ░░  ░░  ░░  ░▓  ░▓  ░▓  ░▓  ▓░  ▓░  ▓░  ▓░  ▓▓  ▓▓  ▓▓  ▓▓
+	//     0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15
+	this.layering = function(ii){
+		// Creating layers for each indexed color in arr
+		var layers = [], val=0, ah = ii.array.length, aw = ii.array[0].length, n1,n2,n3,n4,n5,n6,n7,n8, i, j, k;
+		
+		// Create layers
+		for(k=0; k<ii.palette.length; k++){
+			layers[k] = [];
+			for(j=0; j<ah; j++){
+				layers[k][j] = [];
+				for(i=0; i<aw; i++){
+					layers[k][j][i]=0;
+				}
+			}
+		}
+		
+		// Looping through all pixels and calculating edge node type
+		for(j=1; j<ah-1; j++){
+			for(i=1; i<aw-1; i++){
+				
+				// This pixel's indexed color
+				val = ii.array[j][i];
+				
+				// Are neighbor pixel colors the same?
+				n1 = ii.array[j-1][i-1]===val ? 1 : 0;
+				n2 = ii.array[j-1][i  ]===val ? 1 : 0;
+				n3 = ii.array[j-1][i+1]===val ? 1 : 0;
+				n4 = ii.array[j  ][i-1]===val ? 1 : 0;
+				n5 = ii.array[j  ][i+1]===val ? 1 : 0;
+				n6 = ii.array[j+1][i-1]===val ? 1 : 0;
+				n7 = ii.array[j+1][i  ]===val ? 1 : 0;
+				n8 = ii.array[j+1][i+1]===val ? 1 : 0;
+				
+				// this pixel's type and looking back on previous pixels
+				layers[val][j+1][i+1] = 1 + n5 * 2 + n8 * 4 + n7 * 8 ;
+				if(!n4){ layers[val][j+1][i  ] = 0 + 2 + n7 * 4 + n6 * 8 ; }
+				if(!n2){ layers[val][j  ][i+1] = 0 + n3*2 + n5 * 4 + 8 ; }
+				if(!n1){ layers[val][j  ][i  ] = 0 + n2*2 + 4 + n4 * 8 ; }
+				
+			}// End of i loop
+		}// End of j loop
+		
+		return layers;
+	},// End of layering()
+	
+	// 2. Layer separation and edge detection
+	// Edge node types ( ▓: this layer or 1; ░: not this layer or 0 )
+	// 12  ░░  ▓░  ░▓  ▓▓  ░░  ▓░  ░▓  ▓▓  ░░  ▓░  ░▓  ▓▓  ░░  ▓░  ░▓  ▓▓
+	// 48  ░░  ░░  ░░  ░░  ░▓  ░▓  ░▓  ░▓  ▓░  ▓░  ▓░  ▓░  ▓▓  ▓▓  ▓▓  ▓▓
+	//     0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15
+	this.layeringstep = function(ii,cnum){
+		// Creating layers for each indexed color in arr
+		var layer = [], val=0, ah = ii.array.length, aw = ii.array[0].length, n1,n2,n3,n4,n5,n6,n7,n8, i, j, k;
+		
+		// Create layer
+		for(j=0; j<ah; j++){
+			layer[j] = [];
+			for(i=0; i<aw; i++){
+				layer[j][i]=0;
+			}
+		}
+		
+		// Looping through all pixels and calculating edge node type
+		for(j=1; j<ah; j++){
+			for(i=1; i<aw; i++){
+				layer[j][i] =
+					( ii.array[j-1][i-1]===cnum ? 1 : 0 ) +
+					( ii.array[j-1][i]===cnum ? 2 : 0 ) +
+					( ii.array[j][i-1]===cnum ? 8 : 0 ) +
+					( ii.array[j][i]===cnum ? 4 : 0 )
+				;
+			}// End of i loop
+		}// End of j loop
+			
+		return layer;
+	},// End of layeringstep()
+	
+	// Point in polygon test
+	this.pointinpoly = function( p, pa ){
+		var isin=false;
+
+		for(var i=0,j=pa.length-1; i<pa.length; j=i++){
+			isin =
+				( ((pa[i].y > p.y) !== (pa[j].y > p.y)) && (p.x < (pa[j].x - pa[i].x) * (p.y - pa[i].y) / (pa[j].y - pa[i].y) + pa[i].x) )
+				? !isin : isin;
+		}
+
+		return isin;
+	},
+	
+	// Lookup tables for pathscan
+	// pathscan_combined_lookup[ arr[py][px] ][ dir ] = [nextarrpypx, nextdir, deltapx, deltapy];
+	this.pathscan_combined_lookup = [
+		[[-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1]],// arr[py][px]===0 is invalid
+		[[ 0, 1, 0,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [ 0, 2,-1, 0]],
+		[[-1,-1,-1,-1], [-1,-1,-1,-1], [ 0, 1, 0,-1], [ 0, 0, 1, 0]],
+		[[ 0, 0, 1, 0], [-1,-1,-1,-1], [ 0, 2,-1, 0], [-1,-1,-1,-1]],
+		
+		[[-1,-1,-1,-1], [ 0, 0, 1, 0], [ 0, 3, 0, 1], [-1,-1,-1,-1]],
+		[[13, 3, 0, 1], [13, 2,-1, 0], [ 7, 1, 0,-1], [ 7, 0, 1, 0]],
+		[[-1,-1,-1,-1], [ 0, 1, 0,-1], [-1,-1,-1,-1], [ 0, 3, 0, 1]],
+		[[ 0, 3, 0, 1], [ 0, 2,-1, 0], [-1,-1,-1,-1], [-1,-1,-1,-1]],
+		
+		[[ 0, 3, 0, 1], [ 0, 2,-1, 0], [-1,-1,-1,-1], [-1,-1,-1,-1]],
+		[[-1,-1,-1,-1], [ 0, 1, 0,-1], [-1,-1,-1,-1], [ 0, 3, 0, 1]],
+		[[11, 1, 0,-1], [14, 0, 1, 0], [14, 3, 0, 1], [11, 2,-1, 0]],
+		[[-1,-1,-1,-1], [ 0, 0, 1, 0], [ 0, 3, 0, 1], [-1,-1,-1,-1]],
+		
+		[[ 0, 0, 1, 0], [-1,-1,-1,-1], [ 0, 2,-1, 0], [-1,-1,-1,-1]],
+		[[-1,-1,-1,-1], [-1,-1,-1,-1], [ 0, 1, 0,-1], [ 0, 0, 1, 0]],
+		[[ 0, 1, 0,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [ 0, 2,-1, 0]],
+		[[-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1], [-1,-1,-1,-1]]// arr[py][px]===15 is invalid
+	],
+
+	// 3. Walking through an edge node array, discarding edge node types 0 and 15 and creating paths from the rest.
+	// Walk directions (dir): 0 > ; 1 ^ ; 2 < ; 3 v 
+	this.pathscan = function( arr, pathomit ){
+		var paths=[], pacnt=0, pcnt=0, px=0, py=0, w = arr[0].length, h = arr.length,
+			dir=0, pathfinished=true, holepath=false, lookuprow;
+		
+		for(var j=0; j<h; j++){
+			for(var i=0; i<w; i++){
+				if( (arr[j][i] == 4) || ( arr[j][i] == 11) ){ // Other values are not valid
+					
+					// Init
+					px = i; py = j;
+					paths[pacnt] = {};
+					paths[pacnt].points = [];
+					paths[pacnt].boundingbox = [px,py,px,py];
+					paths[pacnt].holechildren = [];
+					pathfinished = false;
+					pcnt=0;
+					holepath = (arr[j][i]==11);
+					dir = 1;
+
+					// Path points loop
+					while(!pathfinished){
+						
+						// New path point
+						paths[pacnt].points[pcnt] = {};
+						paths[pacnt].points[pcnt].x = px-1;
+						paths[pacnt].points[pcnt].y = py-1;
+						paths[pacnt].points[pcnt].t = arr[py][px];
+						
+						// Bounding box
+						if( (px-1) < paths[pacnt].boundingbox[0] ){ paths[pacnt].boundingbox[0] = px-1; }
+						if( (px-1) > paths[pacnt].boundingbox[2] ){ paths[pacnt].boundingbox[2] = px-1; }
+						if( (py-1) < paths[pacnt].boundingbox[1] ){ paths[pacnt].boundingbox[1] = py-1; }
+						if( (py-1) > paths[pacnt].boundingbox[3] ){ paths[pacnt].boundingbox[3] = py-1; }
+						
+						// Next: look up the replacement, direction and coordinate changes = clear this cell, turn if required, walk forward
+						lookuprow = _this.pathscan_combined_lookup[ arr[py][px] ][ dir ];
+						arr[py][px] = lookuprow[0]; dir = lookuprow[1]; px += lookuprow[2]; py += lookuprow[3];
+
+						// Close path
+						if( (px-1 === paths[pacnt].points[0].x ) && ( py-1 === paths[pacnt].points[0].y ) ){
+							pathfinished = true;
+							
+							// Discarding paths shorter than pathomit
+							if( paths[pacnt].points.length < pathomit ){
+								paths.pop();
+							}else{
+							
+								paths[pacnt].isholepath = holepath ? true : false;
+								
+								// Finding the parent shape for this hole
+								if(holepath){
+									
+									var parentidx = 0, parentbbox = [-1,-1,w+1,h+1];
+									for(var parentcnt=0; parentcnt < pacnt; parentcnt++){
+										if( (!paths[parentcnt].isholepath) &&
+											_this.boundingboxincludes( paths[parentcnt].boundingbox , paths[pacnt].boundingbox ) &&
+											_this.boundingboxincludes( parentbbox , paths[parentcnt].boundingbox ) &&
+											_this.pointinpoly( paths[pacnt].points[0], paths[parentcnt].points )
+										){
+											parentidx = parentcnt;
+											parentbbox = paths[parentcnt].boundingbox;
+										}
+									}
+									
+									paths[parentidx].holechildren.push( pacnt );
+									
+								}// End of holepath parent finding
+								
+								pacnt++;
+							
+							}
+							
+						}// End of Close path
+						
+						pcnt++;
+						
+					}// End of Path points loop
+					
+				}// End of Follow path
+				
+			}// End of i loop
+		}// End of j loop
+		
+		return paths;
+	},// End of pathscan()
+	
+	this.boundingboxincludes = function( parentbbox, childbbox ){
+		return ( ( parentbbox[0] < childbbox[0] ) && ( parentbbox[1] < childbbox[1] ) && ( parentbbox[2] > childbbox[2] ) && ( parentbbox[3] > childbbox[3] ) );
+	},// End of boundingboxincludes()
+	
+	// 3. Batch pathscan
+	this.batchpathscan = function( layers, pathomit ){
+		var bpaths = [];
+		for(var k in layers){
+			if(!layers.hasOwnProperty(k)){ continue; }
+			bpaths[k] = _this.pathscan( layers[k], pathomit );
+		}
+		return bpaths;
+	},
+	
+	// 4. interpollating between path points for nodes with 8 directions ( East, SouthEast, S, SW, W, NW, N, NE )
+	this.internodes = function( paths, options ){
+		var ins = [], palen=0, nextidx=0, nextidx2=0, previdx=0, previdx2=0, pacnt, pcnt;
+		
+		// paths loop
+		for(pacnt=0; pacnt<paths.length; pacnt++){
+			
+			ins[pacnt] = {};
+			ins[pacnt].points = [];
+			ins[pacnt].boundingbox = paths[pacnt].boundingbox;
+			ins[pacnt].holechildren = paths[pacnt].holechildren;
+			ins[pacnt].isholepath = paths[pacnt].isholepath;
+			palen = paths[pacnt].points.length;
+			
+			// pathpoints loop
+			for(pcnt=0; pcnt<palen; pcnt++){
+			
+				// next and previous point indexes
+				nextidx = (pcnt+1)%palen; nextidx2 = (pcnt+2)%palen; previdx = (pcnt-1+palen)%palen; previdx2 = (pcnt-2+palen)%palen;
+				
+				// right angle enhance
+				if( options.rightangleenhance && _this.testrightangle( paths[pacnt], previdx2, previdx, pcnt, nextidx, nextidx2 ) ){
+					
+					// Fix previous direction
+					if(ins[pacnt].points.length > 0){
+						ins[pacnt].points[ ins[pacnt].points.length-1 ].linesegment = _this.getdirection(
+								ins[pacnt].points[ ins[pacnt].points.length-1 ].x,
+								ins[pacnt].points[ ins[pacnt].points.length-1 ].y,
+								paths[pacnt].points[pcnt].x,
+								paths[pacnt].points[pcnt].y
+							);
+					}
+					
+					// This corner point
+					ins[pacnt].points.push({
+						x : paths[pacnt].points[pcnt].x,
+						y : paths[pacnt].points[pcnt].y,
+						linesegment : _this.getdirection(
+								paths[pacnt].points[pcnt].x,
+								paths[pacnt].points[pcnt].y,
+								(( paths[pacnt].points[pcnt].x + paths[pacnt].points[nextidx].x ) /2),
+								(( paths[pacnt].points[pcnt].y + paths[pacnt].points[nextidx].y ) /2)
+							)
+					});
+					
+				}// End of right angle enhance
+				
+				// interpolate between two path points
+				ins[pacnt].points.push({
+					x : (( paths[pacnt].points[pcnt].x + paths[pacnt].points[nextidx].x ) /2),
+					y : (( paths[pacnt].points[pcnt].y + paths[pacnt].points[nextidx].y ) /2),
+					linesegment : _this.getdirection(
+							(( paths[pacnt].points[pcnt].x + paths[pacnt].points[nextidx].x ) /2),
+							(( paths[pacnt].points[pcnt].y + paths[pacnt].points[nextidx].y ) /2),
+							(( paths[pacnt].points[nextidx].x + paths[pacnt].points[nextidx2].x ) /2),
+							(( paths[pacnt].points[nextidx].y + paths[pacnt].points[nextidx2].y ) /2)
+						)
+				});
+				
+			}// End of pathpoints loop
+						
+		}// End of paths loop
+		
+		return ins;
+	},// End of internodes()
+	
+	this.testrightangle = function( path, idx1, idx2, idx3, idx4, idx5 ){
+		return ( (( path.points[idx3].x === path.points[idx1].x) &&
+				  ( path.points[idx3].x === path.points[idx2].x) &&
+				  ( path.points[idx3].y === path.points[idx4].y) &&
+				  ( path.points[idx3].y === path.points[idx5].y)
+				 ) ||
+				 (( path.points[idx3].y === path.points[idx1].y) &&
+				  ( path.points[idx3].y === path.points[idx2].y) &&
+				  ( path.points[idx3].x === path.points[idx4].x) &&
+				  ( path.points[idx3].x === path.points[idx5].x)
+				 )
+		);
+	},// End of testrightangle()
+	
+	this.getdirection = function( x1, y1, x2, y2 ){
+		var val = 8;
+		if(x1 < x2){
+			if     (y1 < y2){ val = 1; }// SouthEast
+			else if(y1 > y2){ val = 7; }// NE
+			else            { val = 0; }// E
+		}else if(x1 > x2){
+			if     (y1 < y2){ val = 3; }// SW
+			else if(y1 > y2){ val = 5; }// NW
+			else            { val = 4; }// W
+		}else{
+			if     (y1 < y2){ val = 2; }// S
+			else if(y1 > y2){ val = 6; }// N
+			else            { val = 8; }// center, this should not happen
+		}
+		return val;
+	},// End of getdirection()
+	
+	// 4. Batch interpollation
+	this.batchinternodes = function( bpaths, options ){
+		var binternodes = [];
+		for (var k in bpaths) {
+			if(!bpaths.hasOwnProperty(k)){ continue; }
+			binternodes[k] = _this.internodes(bpaths[k], options);
+		}
+		return binternodes;
+	},
+	
+	// 5. tracepath() : recursively trying to fit straight and quadratic spline segments on the 8 direction internode path
+	
+	// 5.1. Find sequences of points with only 2 segment types
+	// 5.2. Fit a straight line on the sequence
+	// 5.3. If the straight line fails (distance error > ltres), find the point with the biggest error
+	// 5.4. Fit a quadratic spline through errorpoint (project this to get controlpoint), then measure errors on every point in the sequence
+	// 5.5. If the spline fails (distance error > qtres), find the point with the biggest error, set splitpoint = fitting point
+	// 5.6. Split sequence and recursively apply 5.2. - 5.6. to startpoint-splitpoint and splitpoint-endpoint sequences
+	
+	this.tracepath = function( path, ltres, qtres ){
+		var pcnt=0, segtype1, segtype2, seqend, smp = {};
+		smp.segments = [];
+		smp.boundingbox = path.boundingbox;
+		smp.holechildren = path.holechildren;
+		smp.isholepath = path.isholepath;
+		
+		while(pcnt < path.points.length){
+			// 5.1. Find sequences of points with only 2 segment types
+			segtype1 = path.points[pcnt].linesegment; segtype2 = -1; seqend=pcnt+1;
+			while(
+				((path.points[seqend].linesegment === segtype1) || (path.points[seqend].linesegment === segtype2) || (segtype2 === -1))
+				&& (seqend < path.points.length-1) ){
+				
+				if((path.points[seqend].linesegment!==segtype1) && (segtype2===-1)){ segtype2 = path.points[seqend].linesegment; }
+				seqend++;
+				
+			}
+			if(seqend === path.points.length-1){ seqend = 0; }
+
+			// 5.2. - 5.6. Split sequence and recursively apply 5.2. - 5.6. to startpoint-splitpoint and splitpoint-endpoint sequences
+			smp.segments = smp.segments.concat( _this.fitseq(path, ltres, qtres, pcnt, seqend) );
+			
+			// forward pcnt;
+			if(seqend>0){ pcnt = seqend; }else{ pcnt = path.points.length; }
+			
+		}// End of pcnt loop
+		
+		return smp;
+	},// End of tracepath()
+		
+	// 5.2. - 5.6. recursively fitting a straight or quadratic line segment on this sequence of path nodes,
+	// called from tracepath()
+	this.fitseq = function( path, ltres, qtres, seqstart, seqend ){
+		// return if invalid seqend
+		if( (seqend>path.points.length) || (seqend<0) ){ return []; }
+		// variables
+		var errorpoint=seqstart, errorval=0, curvepass=true, px, py, dist2;
+		var tl = (seqend-seqstart); if(tl<0){ tl += path.points.length; }
+		var vx = (path.points[seqend].x-path.points[seqstart].x) / tl,
+			vy = (path.points[seqend].y-path.points[seqstart].y) / tl;
+		
+		// 5.2. Fit a straight line on the sequence
+		var pcnt = (seqstart+1) % path.points.length, pl;
+		while(pcnt != seqend){
+			pl = pcnt-seqstart; if(pl<0){ pl += path.points.length; }
+			px = path.points[seqstart].x + vx * pl; py = path.points[seqstart].y + vy * pl;
+			dist2 = (path.points[pcnt].x-px)*(path.points[pcnt].x-px) + (path.points[pcnt].y-py)*(path.points[pcnt].y-py);
+			if(dist2>ltres){curvepass=false;}
+			if(dist2>errorval){ errorpoint=pcnt; errorval=dist2; }
+			pcnt = (pcnt+1)%path.points.length;
+		}
+		// return straight line if fits
+		if(curvepass){ return [{ type:'L', x1:path.points[seqstart].x, y1:path.points[seqstart].y, x2:path.points[seqend].x, y2:path.points[seqend].y }]; }
+		
+		// 5.3. If the straight line fails (distance error>ltres), find the point with the biggest error
+		var fitpoint = errorpoint; curvepass = true; errorval = 0;
+		
+		// 5.4. Fit a quadratic spline through this point, measure errors on every point in the sequence
+		// helpers and projecting to get control point
+		var t=(fitpoint-seqstart)/tl, t1=(1-t)*(1-t), t2=2*(1-t)*t, t3=t*t;
+		var cpx = (t1*path.points[seqstart].x + t3*path.points[seqend].x - path.points[fitpoint].x)/-t2 ,
+			cpy = (t1*path.points[seqstart].y + t3*path.points[seqend].y - path.points[fitpoint].y)/-t2 ;
+		
+		// Check every point
+		pcnt = seqstart+1;
+		while(pcnt != seqend){
+			t=(pcnt-seqstart)/tl; t1=(1-t)*(1-t); t2=2*(1-t)*t; t3=t*t;
+			px = t1 * path.points[seqstart].x + t2 * cpx + t3 * path.points[seqend].x;
+			py = t1 * path.points[seqstart].y + t2 * cpy + t3 * path.points[seqend].y;
+			
+			dist2 = (path.points[pcnt].x-px)*(path.points[pcnt].x-px) + (path.points[pcnt].y-py)*(path.points[pcnt].y-py);
+			
+			if(dist2>qtres){curvepass=false;}
+			if(dist2>errorval){ errorpoint=pcnt; errorval=dist2; }
+			pcnt = (pcnt+1)%path.points.length;
+		}
+		// return spline if fits
+		if(curvepass){ return [{ type:'Q', x1:path.points[seqstart].x, y1:path.points[seqstart].y, x2:cpx, y2:cpy, x3:path.points[seqend].x, y3:path.points[seqend].y }]; }
+		// 5.5. If the spline fails (distance error>qtres), find the point with the biggest error
+		var splitpoint = fitpoint; // Earlier: Math.floor((fitpoint + errorpoint)/2);
+		
+		// 5.6. Split sequence and recursively apply 5.2. - 5.6. to startpoint-splitpoint and splitpoint-endpoint sequences
+		return _this.fitseq( path, ltres, qtres, seqstart, splitpoint ).concat(
+				_this.fitseq( path, ltres, qtres, splitpoint, seqend ) );
+		
+	},// End of fitseq()
+	
+	// 5. Batch tracing paths
+	this.batchtracepaths = function(internodepaths,ltres,qtres){
+		var btracedpaths = [];
+		for(var k in internodepaths){
+			if(!internodepaths.hasOwnProperty(k)){ continue; }
+			btracedpaths.push( _this.tracepath(internodepaths[k],ltres,qtres) );
+		}
+		return btracedpaths;
+	},
+	
+	// 5. Batch tracing layers
+	this.batchtracelayers = function(binternodes, ltres, qtres){
+		var btbis = [];
+		for(var k in binternodes){
+			if(!binternodes.hasOwnProperty(k)){ continue; }
+			btbis[k] = _this.batchtracepaths(binternodes[k], ltres, qtres);
+		}
+		return btbis;
+	},
+	
+	////////////////////////////////////////////////////////////
+	//
+	//  SVG Drawing functions
+	//
+	////////////////////////////////////////////////////////////
+	
+	// Rounding to given decimals https://stackoverflow.com/questions/11832914/round-to-at-most-2-decimal-places-in-javascript
+	this.roundtodec = function(val,places){ return +val.toFixed(places); },
+	
+	// Getting SVG path element string from a traced path
+	this.svgpathstring = function( tracedata, lnum, pathnum, options ){
+		
+		var layer = tracedata.layers[lnum], smp = layer[pathnum], str='', pcnt;
+		
+		// Line filter
+		if(options.linefilter && (smp.segments.length < 3)){ return str; }
+		
+		// Starting path element, desc contains layer and path number
+		str = '<path '+
+			( options.desc ? ('desc="l '+lnum+' p '+pathnum+'" ') : '' ) +
+			_this.tosvgcolorstr(tracedata.palette[lnum], options) +
+			'd="';
+		
+		// Creating non-hole path string
+		if( options.roundcoords === -1 ){
+			str += 'M '+ smp.segments[0].x1 * options.scale +' '+ smp.segments[0].y1 * options.scale +' ';
+			for(pcnt=0; pcnt<smp.segments.length; pcnt++){
+				str += smp.segments[pcnt].type +' '+ smp.segments[pcnt].x2 * options.scale +' '+ smp.segments[pcnt].y2 * options.scale +' ';
+				if(smp.segments[pcnt].hasOwnProperty('x3')){
+					str += smp.segments[pcnt].x3 * options.scale +' '+ smp.segments[pcnt].y3 * options.scale +' ';
+				}
+			}
+			str += 'Z ';
+		}else{
+			str += 'M '+ _this.roundtodec( smp.segments[0].x1 * options.scale, options.roundcoords ) +' '+ _this.roundtodec( smp.segments[0].y1 * options.scale, options.roundcoords ) +' ';
+			for(pcnt=0; pcnt<smp.segments.length; pcnt++){
+				str += smp.segments[pcnt].type +' '+ _this.roundtodec( smp.segments[pcnt].x2 * options.scale, options.roundcoords ) +' '+ _this.roundtodec( smp.segments[pcnt].y2 * options.scale, options.roundcoords ) +' ';
+				if(smp.segments[pcnt].hasOwnProperty('x3')){
+					str += _this.roundtodec( smp.segments[pcnt].x3 * options.scale, options.roundcoords ) +' '+ _this.roundtodec( smp.segments[pcnt].y3 * options.scale, options.roundcoords ) +' ';
+				}
+			}
+			str += 'Z ';
+		}// End of creating non-hole path string
+		
+		// Hole children
+		for( var hcnt=0; hcnt < smp.holechildren.length; hcnt++){
+			var hsmp = layer[ smp.holechildren[hcnt] ];
+			// Creating hole path string
+			if( options.roundcoords === -1 ){
+				
+				if(hsmp.segments[ hsmp.segments.length-1 ].hasOwnProperty('x3')){
+					str += 'M '+ hsmp.segments[ hsmp.segments.length-1 ].x3 * options.scale +' '+ hsmp.segments[ hsmp.segments.length-1 ].y3 * options.scale +' ';
+				}else{
+					str += 'M '+ hsmp.segments[ hsmp.segments.length-1 ].x2 * options.scale +' '+ hsmp.segments[ hsmp.segments.length-1 ].y2 * options.scale +' ';
+				}
+				
+				for(pcnt = hsmp.segments.length-1; pcnt >= 0; pcnt--){
+					str += hsmp.segments[pcnt].type +' ';
+					if(hsmp.segments[pcnt].hasOwnProperty('x3')){
+						str += hsmp.segments[pcnt].x2 * options.scale +' '+ hsmp.segments[pcnt].y2 * options.scale +' ';
+					}
+					
+					str += hsmp.segments[pcnt].x1 * options.scale +' '+ hsmp.segments[pcnt].y1 * options.scale +' ';
+				}
+				
+			}else{
+				
+				if(hsmp.segments[ hsmp.segments.length-1 ].hasOwnProperty('x3')){
+					str += 'M '+ _this.roundtodec( hsmp.segments[ hsmp.segments.length-1 ].x3 * options.scale ) +' '+ _this.roundtodec( hsmp.segments[ hsmp.segments.length-1 ].y3 * options.scale ) +' ';
+				}else{
+					str += 'M '+ _this.roundtodec( hsmp.segments[ hsmp.segments.length-1 ].x2 * options.scale ) +' '+ _this.roundtodec( hsmp.segments[ hsmp.segments.length-1 ].y2 * options.scale ) +' ';
+				}
+				
+				for(pcnt = hsmp.segments.length-1; pcnt >= 0; pcnt--){
+					str += hsmp.segments[pcnt].type +' ';
+					if(hsmp.segments[pcnt].hasOwnProperty('x3')){
+						str += _this.roundtodec( hsmp.segments[pcnt].x2 * options.scale ) +' '+ _this.roundtodec( hsmp.segments[pcnt].y2 * options.scale ) +' ';
+					}
+					str += _this.roundtodec( hsmp.segments[pcnt].x1 * options.scale ) +' '+ _this.roundtodec( hsmp.segments[pcnt].y1 * options.scale ) +' ';
+				}
+				
+				
+			}// End of creating hole path string
+			
+			str += 'Z '; // Close path
+			
+		}// End of holepath check
+		
+		// Closing path element
+		str += '" />';
+		
+		// Rendering control points
+		if(options.lcpr || options.qcpr){
+			for(pcnt=0; pcnt<smp.segments.length; pcnt++){
+				if( smp.segments[pcnt].hasOwnProperty('x3') && options.qcpr ){
+					str += '<circle cx="'+ smp.segments[pcnt].x2 * options.scale +'" cy="'+ smp.segments[pcnt].y2 * options.scale +'" r="'+ options.qcpr +'" fill="cyan" stroke-width="'+ options.qcpr * 0.2 +'" stroke="black" />';
+					str += '<circle cx="'+ smp.segments[pcnt].x3 * options.scale +'" cy="'+ smp.segments[pcnt].y3 * options.scale +'" r="'+ options.qcpr +'" fill="white" stroke-width="'+ options.qcpr * 0.2 +'" stroke="black" />';
+					str += '<line x1="'+ smp.segments[pcnt].x1 * options.scale +'" y1="'+ smp.segments[pcnt].y1 * options.scale +'" x2="'+ smp.segments[pcnt].x2 * options.scale +'" y2="'+ smp.segments[pcnt].y2 * options.scale +'" stroke-width="'+ options.qcpr * 0.2 +'" stroke="cyan" />';
+					str += '<line x1="'+ smp.segments[pcnt].x2 * options.scale +'" y1="'+ smp.segments[pcnt].y2 * options.scale +'" x2="'+ smp.segments[pcnt].x3 * options.scale +'" y2="'+ smp.segments[pcnt].y3 * options.scale +'" stroke-width="'+ options.qcpr * 0.2 +'" stroke="cyan" />';
+				}
+				if( (!smp.segments[pcnt].hasOwnProperty('x3')) && options.lcpr){
+					str += '<circle cx="'+ smp.segments[pcnt].x2 * options.scale +'" cy="'+ smp.segments[pcnt].y2 * options.scale +'" r="'+ options.lcpr +'" fill="white" stroke-width="'+ options.lcpr * 0.2 +'" stroke="black" />';
+				}
+			}
+			
+			// Hole children control points
+			for( var hcnt=0; hcnt < smp.holechildren.length; hcnt++){
+				var hsmp = layer[ smp.holechildren[hcnt] ];
+				for(pcnt=0; pcnt<hsmp.segments.length; pcnt++){
+					if( hsmp.segments[pcnt].hasOwnProperty('x3') && options.qcpr ){
+						str += '<circle cx="'+ hsmp.segments[pcnt].x2 * options.scale +'" cy="'+ hsmp.segments[pcnt].y2 * options.scale +'" r="'+ options.qcpr +'" fill="cyan" stroke-width="'+ options.qcpr * 0.2 +'" stroke="black" />';
+						str += '<circle cx="'+ hsmp.segments[pcnt].x3 * options.scale +'" cy="'+ hsmp.segments[pcnt].y3 * options.scale +'" r="'+ options.qcpr +'" fill="white" stroke-width="'+ options.qcpr * 0.2 +'" stroke="black" />';
+						str += '<line x1="'+ hsmp.segments[pcnt].x1 * options.scale +'" y1="'+ hsmp.segments[pcnt].y1 * options.scale +'" x2="'+ hsmp.segments[pcnt].x2 * options.scale +'" y2="'+ hsmp.segments[pcnt].y2 * options.scale +'" stroke-width="'+ options.qcpr * 0.2 +'" stroke="cyan" />';
+						str += '<line x1="'+ hsmp.segments[pcnt].x2 * options.scale +'" y1="'+ hsmp.segments[pcnt].y2 * options.scale +'" x2="'+ hsmp.segments[pcnt].x3 * options.scale +'" y2="'+ hsmp.segments[pcnt].y3 * options.scale +'" stroke-width="'+ options.qcpr * 0.2 +'" stroke="cyan" />';
+					}
+					if( (!hsmp.segments[pcnt].hasOwnProperty('x3')) && options.lcpr){
+						str += '<circle cx="'+ hsmp.segments[pcnt].x2 * options.scale +'" cy="'+ hsmp.segments[pcnt].y2 * options.scale +'" r="'+ options.lcpr +'" fill="white" stroke-width="'+ options.lcpr * 0.2 +'" stroke="black" />';
+					}
+				}
+			}
+		}// End of Rendering control points
+			
+		return str;
+		
+	},// End of svgpathstring()
+	
+	// Converting tracedata to an SVG string
+	this.getsvgstring = function( tracedata, options ){
+		
+		options = _this.checkoptions(options);
+		
+		var w = tracedata.width * options.scale, h = tracedata.height * options.scale;
+		
+		// SVG start
+		var svgstr = '<svg ' + (options.viewbox ? ('viewBox="0 0 '+w+' '+h+'" ') : ('width="'+w+'" height="'+h+'" ')) +
+			'version="1.1" xmlns="http://www.w3.org/2000/svg" desc="Created with imagetracer.js version '+_this.versionnumber+'" >';
+
+		// Drawing: Layers and Paths loops
+		for(var lcnt=0; lcnt < tracedata.layers.length; lcnt++){
+			for(var pcnt=0; pcnt < tracedata.layers[lcnt].length; pcnt++){
+				
+				// Adding SVG <path> string
+				if( !tracedata.layers[lcnt][pcnt].isholepath ){
+					svgstr += _this.svgpathstring( tracedata, lcnt, pcnt, options );
+				}
+					
+			}// End of paths loop
+		}// End of layers loop
+		
+		// SVG End
+		svgstr+='</svg>';
+		
+		return svgstr;
+		
+	},// End of getsvgstring()
+	
+	// Comparator for numeric Array.sort
+	this.compareNumbers = function(a,b){ return a - b; },
+	
+	// Convert color object to rgba string
+	this.torgbastr = function(c){ return 'rgba('+c.r+','+c.g+','+c.b+','+c.a+')'; },
+	
+	// Convert color object to SVG color string
+	this.tosvgcolorstr = function(c, options){
+		return 'fill="rgb('+c.r+','+c.g+','+c.b+')" stroke="rgb('+c.r+','+c.g+','+c.b+')" stroke-width="'+options.strokewidth+'" opacity="'+c.a/255.0+'" ';
+	},
+	
+	// Helper function: Appending an <svg> element to a container from an svgstring
+	this.appendSVGString = function(svgstr,parentid){
+		var div;
+		if(parentid){
+			div = document.getElementById(parentid);
+			if(!div){
+				div = document.createElement('div');
+				div.id = parentid;
+				document.body.appendChild(div);
+			}
+		}else{
+			div = document.createElement('div');
+			document.body.appendChild(div);
+		}
+		div.innerHTML += svgstr;
+	},
+	
+	////////////////////////////////////////////////////////////
+	//
+	//  Canvas functions
+	//
+	////////////////////////////////////////////////////////////
+	
+	// Gaussian kernels for blur
+	this.gks = [ [0.27901,0.44198,0.27901], [0.135336,0.228569,0.272192,0.228569,0.135336], [0.086776,0.136394,0.178908,0.195843,0.178908,0.136394,0.086776],
+	             [0.063327,0.093095,0.122589,0.144599,0.152781,0.144599,0.122589,0.093095,0.063327], [0.049692,0.069304,0.089767,0.107988,0.120651,0.125194,0.120651,0.107988,0.089767,0.069304,0.049692] ],
+	
+	// Selective Gaussian blur for preprocessing
+	this.blur = function(imgd,radius,delta){
+		var i,j,k,d,idx,racc,gacc,bacc,aacc,wacc;
+		
+		// new ImageData
+		var imgd2 = { width:imgd.width, height:imgd.height, data:[] };
+		
+		// radius and delta limits, this kernel
+		radius = Math.floor(radius); if(radius<1){ return imgd; } if(radius>5){ radius = 5; } delta = Math.abs( delta ); if(delta>1024){ delta = 1024; }
+		var thisgk = _this.gks[radius-1];
+		
+		// loop through all pixels, horizontal blur
+		for( j=0; j < imgd.height; j++ ){
+			for( i=0; i < imgd.width; i++ ){
+
+				racc = 0; gacc = 0; bacc = 0; aacc = 0; wacc = 0;
+				// gauss kernel loop
+				for( k = -radius; k < radius+1; k++){
+					// add weighted color values
+					if( (i+k > 0) && (i+k < imgd.width) ){
+						idx = (j*imgd.width+i+k)*4;
+						racc += imgd.data[idx  ] * thisgk[k+radius];
+						gacc += imgd.data[idx+1] * thisgk[k+radius];
+						bacc += imgd.data[idx+2] * thisgk[k+radius];
+						aacc += imgd.data[idx+3] * thisgk[k+radius];
+						wacc += thisgk[k+radius];
+					}
+				}
+				// The new pixel
+				idx = (j*imgd.width+i)*4;
+				imgd2.data[idx  ] = Math.floor(racc / wacc);
+				imgd2.data[idx+1] = Math.floor(gacc / wacc);
+				imgd2.data[idx+2] = Math.floor(bacc / wacc);
+				imgd2.data[idx+3] = Math.floor(aacc / wacc);
+				
+			}// End of width loop
+		}// End of horizontal blur
+		
+		// copying the half blurred imgd2
+		var himgd = new Uint8ClampedArray(imgd2.data);
+		
+		// loop through all pixels, vertical blur
+		for( j=0; j < imgd.height; j++ ){
+			for( i=0; i < imgd.width; i++ ){
+
+				racc = 0; gacc = 0; bacc = 0; aacc = 0; wacc = 0;
+				// gauss kernel loop
+				for( k = -radius; k < radius+1; k++){
+					// add weighted color values
+					if( (j+k > 0) && (j+k < imgd.height) ){
+						idx = ((j+k)*imgd.width+i)*4;
+						racc += himgd[idx  ] * thisgk[k+radius];
+						gacc += himgd[idx+1] * thisgk[k+radius];
+						bacc += himgd[idx+2] * thisgk[k+radius];
+						aacc += himgd[idx+3] * thisgk[k+radius];
+						wacc += thisgk[k+radius];
+					}
+				}
+				// The new pixel
+				idx = (j*imgd.width+i)*4;
+				imgd2.data[idx  ] = Math.floor(racc / wacc);
+				imgd2.data[idx+1] = Math.floor(gacc / wacc);
+				imgd2.data[idx+2] = Math.floor(bacc / wacc);
+				imgd2.data[idx+3] = Math.floor(aacc / wacc);
+				
+			}// End of width loop
+		}// End of vertical blur
+		
+		// Selective blur: loop through all pixels
+		for( j=0; j < imgd.height; j++ ){
+			for( i=0; i < imgd.width; i++ ){
+				
+				idx = (j*imgd.width+i)*4;
+				// d is the difference between the blurred and the original pixel
+				d = Math.abs(imgd2.data[idx  ] - imgd.data[idx  ]) + Math.abs(imgd2.data[idx+1] - imgd.data[idx+1]) +
+					Math.abs(imgd2.data[idx+2] - imgd.data[idx+2]) + Math.abs(imgd2.data[idx+3] - imgd.data[idx+3]);
+				// selective blur: if d>delta, put the original pixel back
+				if(d>delta){
+					imgd2.data[idx  ] = imgd.data[idx  ];
+					imgd2.data[idx+1] = imgd.data[idx+1];
+					imgd2.data[idx+2] = imgd.data[idx+2];
+					imgd2.data[idx+3] = imgd.data[idx+3];
+				}
+			}
+		}// End of Selective blur
+		
+		return imgd2;
+		
+	},// End of blur()
+	
+	// Helper function: loading an image from a URL, then executing callback with canvas as argument
+	this.loadImage = function(url,callback,options){
+		var img = new Image();
+		if(options && options.corsenabled){ img.crossOrigin = 'Anonymous'; }
+		img.onload = function(){
+			var canvas = document.createElement('canvas');
+			canvas.width = img.width;
+			canvas.height = img.height;
+			var context = canvas.getContext('2d');
+			context.drawImage(img,0,0);
+			callback(canvas);
+		};
+		img.src = url;
+	},
+	
+	// Helper function: getting ImageData from a canvas
+	this.getImgdata = function(canvas){
+		var context = canvas.getContext('2d');
+		return context.getImageData(0,0,canvas.width,canvas.height);
+	},
+	
+	// Special palette to use with drawlayers()
+	this.specpalette = [
+		{r:0,g:0,b:0,a:255}, {r:128,g:128,b:128,a:255}, {r:0,g:0,b:128,a:255}, {r:64,g:64,b:128,a:255},
+		{r:192,g:192,b:192,a:255}, {r:255,g:255,b:255,a:255}, {r:128,g:128,b:192,a:255}, {r:0,g:0,b:192,a:255},
+		{r:128,g:0,b:0,a:255}, {r:128,g:64,b:64,a:255}, {r:128,g:0,b:128,a:255}, {r:168,g:168,b:168,a:255},
+		{r:192,g:128,b:128,a:255}, {r:192,g:0,b:0,a:255}, {r:255,g:255,b:255,a:255}, {r:0,g:128,b:0,a:255}
+	],
+	
+	// Helper function: Drawing all edge node layers into a container
+	this.drawLayers = function(layers,palette,scale,parentid){
+		scale = scale||1;
+		var w,h,i,j,k;
+		
+		// Preparing container
+		var div;
+		if(parentid){
+			div = document.getElementById(parentid);
+			if(!div){
+				div = document.createElement('div');
+				div.id = parentid;
+				document.body.appendChild(div);
+			}
+		}else{
+			div = document.createElement('div');
+			document.body.appendChild(div);
+		}
+		
+		// Layers loop
+		for (k in layers) {
+			if(!layers.hasOwnProperty(k)){ continue; }
+			
+			// width, height
+			w=layers[k][0].length; h=layers[k].length;
+			
+			// Creating new canvas for every layer
+			var canvas = document.createElement('canvas'); canvas.width=w*scale; canvas.height=h*scale;
+			var context = canvas.getContext('2d');
+			
+			// Drawing
+			for(j=0; j<h; j++){
+				for(i=0; i<w; i++){
+					context.fillStyle = _this.torgbastr(palette[ layers[k][j][i]%palette.length ]);
+					context.fillRect(i*scale,j*scale,scale,scale);
+				}
+			}
+			
+			// Appending canvas to container
+			div.appendChild(canvas);
+		}// End of Layers loop
+	}// End of drawlayers
+	
+	;// End of function list
+	
+}// End of ImageTracer object
+
+// export as AMD module / Node module / browser or worker variable
+if(typeof define === 'function' && define.amd){
+	define(function() { return new ImageTracer(); });
+}else if(typeof module !== 'undefined'){
+	module.exports = new ImageTracer();
+}else if(typeof self !== 'undefined'){
+	self.ImageTracer = new ImageTracer();
+}else window.ImageTracer = new ImageTracer();
+
+})();
+</script>
+<script>
+const $=id=>document.getElementById(id),stage=$('stage'),wrap=$('wrap'),sel=$('sel');
+const SHAPE='path,rect,circle,ellipse,line,polyline,polygon,text,use,image';
+let svg=null,cur=null,S=[],stack=[],dirty=false,name='logo-editado.svg',downloads=null;
+const cs=(e,p)=>getComputedStyle(e)[p];
+const hx=c=>{const m=(c||'').match(/[\d.]+/g);if(!m||m.length<3||(m[3]!==undefined&&+m[3]===0))return null;return'#'+m.slice(0,3).map(n=>Math.round(+n).toString(16).padStart(2,'0')).join('')};
+const shapes=el=>el.matches(SHAPE)?[el]:[...el.querySelectorAll(SHAPE)];
+const status=t=>$('status').textContent=t||'';
+
+function clean(root){
+ root.querySelectorAll('script,foreignObject').forEach(n=>n.remove());
+ [root,...root.querySelectorAll('*')].forEach(n=>[...n.attributes].forEach(a=>{
+  if(/^on/i.test(a.name)||(/href$/i.test(a.name)&&/^\s*javascript:/i.test(a.value)))n.removeAttribute(a.name)}));
+}
+function mount(text,fname){
+ const doc=new DOMParser().parseFromString(text,'image/svg+xml');
+ const root=doc.documentElement;
+ if(!root||root.nodeName.toLowerCase()!=='svg'||doc.querySelector('parsererror')){status('Não consegui ler esse conteúdo como SVG.');return false}
+ clean(root);
+ wrap.querySelectorAll('svg').forEach(n=>n.remove());$('empty').style.display='none';
+ svg=document.importNode(root,true);wrap.insertBefore(svg,sel);
+ if(fname)name=fname.replace(/\.svg$/i,'')+'-editado.svg';
+ if(!svg.getAttribute('viewBox')){const w=parseFloat(svg.getAttribute('width')),h=parseFloat(svg.getAttribute('height'));
+  if(w&&h)svg.setAttribute('viewBox',`0 0 ${w} ${h}`);else{try{const b=svg.getBBox();svg.setAttribute('viewBox',`${b.x} ${b.y} ${b.width} ${b.height}`)}catch(_){}}}
+ svg.style.maxWidth='none';applyZoom();
+ svg.addEventListener('pointerdown',onDown);svg.addEventListener('dblclick',e=>{const t=e.target.closest(SHAPE);if(t)choose(t)});
+ deselect();buildPalette();layers();refresh();['save','copy','da','trace'].forEach(i=>$(i).disabled=false);setDoc();
+ const n=svg.querySelectorAll(SHAPE).length;
+ const img=svg.querySelector('image');
+ status(n+' elementos editáveis'+(img?' — atenção: este SVG contém uma imagem embutida (raster); só dá para trocar cores de formas vetoriais. Use “Vetorizar” para convertê-la.':'.'));
+ return true;
+}
+
+function layers(){const L=$('layers');L.innerHTML='';if(!svg)return;let n=0;
+ const walk=(el,d)=>[...el.children].forEach(c=>{const tg=c.tagName.toLowerCase();
+  if(n>600||/^(defs|style|title|desc|metadata|pattern|clippath|mask|lineargradient|radialgradient|filter|symbol)$/.test(tg))return;n++;
+  const g=tg==='g',r=document.createElement('div'),sw=document.createElement('i'),t=document.createElement('span'),ey=document.createElement('b');
+  r.className='ly';r._el=c;r.style.paddingLeft=8+d*14+'px';
+  const fv=!g&&(cs(c,'fill')!=='none'?cs(c,'fill'):cs(c,'stroke'));sw.style.background=(fv&&hx(fv))||'transparent';
+  t.textContent=(g?'▾ ':'')+(c.id||'<'+tg+'>');ey.textContent=c.style.display==='none'?'○':'●';
+  if(c.style.display==='none')r.classList.add('off');
+  r.onclick=e=>{if(e.target===ey)return;choose(c,e.shiftKey||e.ctrlKey||e.metaKey)};
+  ey.onclick=()=>{dirty=false;snap();const off=c.style.display==='none';c.style.display=off?'':'none';if(!c.getAttribute('style'))c.removeAttribute('style');
+   ey.textContent=off?'●':'○';r.classList.toggle('off',!off);refresh();mark()};
+  r.append(sw,t,ey);L.appendChild(r);if(g)walk(c,d+1)});
+ walk(svg,0)}
+function hlLayers(){document.querySelectorAll('#layers .ly').forEach(r=>{const on=S.includes(r._el);r.classList.toggle('on',on);if(on&&S.length===1)r.scrollIntoView({block:'nearest'})})}
+function deselect(){cur=null;S=[];hlLayers();sel.style.display='none';$('nm').textContent='Nenhum elemento';$('kind').textContent='Clique no desenho';
+ ['fc','fh','fn','sc','sh','sn','up','del','tw','th','m10','p10','sw'].forEach(i=>$(i).disabled=true);$('note').textContent=''}
+function union(){let l=1e9,t=1e9,r=-1e9,b=-1e9;S.forEach(e=>{const q=e.getBoundingClientRect();l=Math.min(l,q.left);t=Math.min(t,q.top);r=Math.max(r,q.right);b=Math.max(b,q.bottom)});return{l,t,r,b,w:r-l,h:b-t}}
+function mark(){wrap.querySelectorAll('.o').forEach(n=>n.remove());if(!S.length){sel.style.display='none';return}
+ const U=union(),s=wrap.getBoundingClientRect();
+ if(S.length>1)S.forEach(e=>{const q=e.getBoundingClientRect(),d=document.createElement('div');d.className='o';Object.assign(d.style,{left:q.left-s.left+'px',top:q.top-s.top+'px',width:q.width+'px',height:q.height+'px'});wrap.appendChild(d)});
+ Object.assign(sel.style,{display:'block',left:U.l-s.left-3+'px',top:U.t-s.top-3+'px',width:U.w+6+'px',height:U.h+6+'px'})}
+[[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[-1,1],[0,1],[1,1]].forEach(([x,y])=>{const h=document.createElement('div');h.className='h';h.dataset.x=x;h.dataset.y=y;
+ h.style.left=(x+1)*50+'%';h.style.top=(y+1)*50+'%';h.style.cursor=x*y===1?'nwse-resize':x*y===-1?'nesw-resize':x?'ew-resize':'ns-resize';sel.appendChild(h)});
+function choose(el,add){if(add){const i=S.indexOf(el);if(i>=0)S.splice(i,1);else S.push(el)}else S=[el];
+ if(!S.length){deselect();return}el=S[S.length-1];cur=el;const f=shapes(el)[0]||el;
+ $('nm').textContent='<'+el.tagName+'>'+(el.id?' #'+el.id:'');
+ $('kind').textContent=S.length>1?S.length+' itens selecionados — editados em conjunto':el.matches(SHAPE)?'Elemento único':shapes(el).length+' elementos neste grupo';
+ ['fc','fh','fn','sc','sh','sn','del','tw','th','m10','p10','sw'].forEach(i=>$(i).disabled=false);
+ $('up').disabled=!(el.parentElement&&el.parentElement!==svg&&el.parentElement.closest('svg')===svg);
+ for(const [p,c,h,n] of [['fill','fc','fh','fn'],['stroke','sc','sh','sn']]){
+  const v=cs(f,p),none=v==='none';$(n).checked=none;
+  const col=hx(v)||'#000000';$(c).value=col;$(h).value=none?'':col}
+ const fv=cs(f,'fill');$('note').textContent=/url\(/.test(fv)?'Este elemento usa gradiente/padrão; escolher uma cor o troca por cor sólida.':'';
+ $('sw').value=fmt(parseFloat(cs(f,'strokeWidth'))||0);showSize();mark();hlLayers()}
+function snap(){if(!dirty){stack.push(svg.outerHTML);dirty=true;$('undo').disabled=false}}
+document.addEventListener('change',()=>{dirty=false});
+function apply(p,v){if(!cur)return;snap();
+ S.forEach(el=>{const group=!el.matches(SHAPE);shapes(el).forEach(e=>{if(group&&v!=='none'&&cs(e,p)==='none')return;e.style[p]=v})});
+ refresh();mark();refreshPaletteLater()}
+for(const [p,c,h,n] of [['fill','fc','fh','fn'],['stroke','sc','sh','sn']]){
+ $(c).oninput=()=>{$(n).checked=false;$(h).value=$(c).value;apply(p,$(c).value)};
+ $(h).onchange=()=>{if(/^#[0-9a-f]{6}$/i.test($(h).value)){$(c).value=$(h).value;$(n).checked=false;apply(p,$(h).value)}};
+ $(n).onchange=()=>{if($(n).checked){apply(p,'none');$(h).value=''}else apply(p,$(c).value)}}
+$('up').onclick=()=>{const p=cur.parentElement.closest('g');if(p&&svg.contains(p))choose(p)};
+
+let palTimer;function refreshPaletteLater(){clearTimeout(palTimer);palTimer=setTimeout(()=>{buildPalette();layers();hlLayers()},600)}
+function buildPalette(){const map=new Map();
+ svg.querySelectorAll(SHAPE).forEach(e=>['fill','stroke'].forEach(p=>{const v=cs(e,p);if(v==='none'||/url\(/.test(v))return;
+  if(e.tagName==='line'&&p==='fill')return;const h=hx(v);if(!h)return;(map.get(h)||map.set(h,[]).get(h)).push([e,p])}));
+ const pal=$('pal');pal.innerHTML='';
+ if(!map.size){pal.innerHTML='<span class="muted">Nenhuma cor sólida encontrada.</span>';return}
+ for(const [h,uses] of map){const i=document.createElement('input');i.type='color';i.value=h;i.title=h+' · '+uses.length+' uso(s)';
+  i.oninput=()=>{snap();uses.forEach(([e,p])=>e.style[p]=i.value);refresh();mark()};pal.appendChild(i)}}
+function refresh(){if(!svg)return;const c=svg.cloneNode(true);c.style.removeProperty('width');c.style.removeProperty('max-width');c.style.removeProperty('height');
+ if(!c.getAttribute('style'))c.removeAttribute('style');$('out').value=$('web').checked?webSvg(c):new XMLSerializer().serializeToString(c);
+ $('warn').textContent=svg.querySelector('image')?'⚠ Este arquivo ainda tem uma imagem raster dentro do SVG (não é vetor de verdade). Use “Vetorizar”.':''}
+$('web').onchange=()=>{if(!$('web').checked)$('use').value='';refresh()};
+function webSvg(c){const live=[...svg.querySelectorAll(SHAPE)],cl=[...c.querySelectorAll(SHAPE)],pal=new Map(),used=new Set();
+ live.forEach((e,i)=>{const t=cl[i];for(const p of['fill','stroke']){const v=cs(e,p);
+  if(p==='stroke'&&(v==='none'||!(parseFloat(cs(e,'strokeWidth'))>0))){if(v!=='none')t.removeAttribute('stroke');continue}
+  if(v==='none'||/url\(/.test(v)||(e.tagName==='line'&&p==='fill'))continue;
+  const h=hx(v);if(!h)continue;if(!pal.has(h))pal.set(h,pal.size+1);const n=pal.get(h),k=p==='fill'?'f':'s';
+  t.removeAttribute(p);t.style.removeProperty(p);t.classList.add(k+'-'+n);used.add(k+n)}
+  if(t.getAttribute('style')==='')t.removeAttribute('style')});
+ const W=parseFloat(c.getAttribute('width'))||Math.round(vbw().width);
+ const css=['svg.svg-web{width:var(--tamanho,'+W+'px);height:auto}',...[...pal].flatMap(([h,n])=>[used.has('f'+n)&&`.f-${n}{fill:var(--cor-${n},${h})}`,used.has('s'+n)&&`.s-${n}{stroke:var(--cor-${n},${h})}`].filter(Boolean))].join('\n');
+ c.classList.add('svg-web');const st=document.createElementNS('http://www.w3.org/2000/svg','style');st.textContent='\n'+css+'\n';c.appendChild(st);
+ const id=(c.querySelector('[id]')||{}).id;
+ $('use').value='/* No CSS da página (SVG colado direto no HTML, não via <img>): */\n.svg-web {\n  --tamanho: '+W+'px;\n'+[...pal].map(([h,n])=>`  --cor-${n}: ${h};`).join('\n')+'\n}\n'+(id?'/* Uma peça específica: */\n#'+id+' { fill: red; }':'');
+ return new XMLSerializer().serializeToString(c)}
+function area(d){return Math.abs(d.split('M').slice(1).reduce((t,sp)=>{const n=sp.match(/-?\d*\.?\d+/g).map(Number);let q=0;
+ for(let i=0;i+3<n.length;i+=2)q+=n[i]*n[i+3]-n[i+2]*n[i+1];const e=n.length-2;q+=n[e]*n[1]-n[0]*n[e+1];return t+q/2},0))}
+function organize(txt,corners,bg,group,T){
+ const doc=new DOMParser().parseFromString(txt,'image/svg+xml'),root=doc.documentElement,vb=root.getAttribute('viewBox').split(/\s+/).map(Number),A=vb[2]*vb[3],items=[],hex=c=>'#'+c.map(n=>n.toString(16).padStart(2,'0')).join(''),NS='http://www.w3.org/2000/svg';
+ doc.querySelectorAll('path').forEach(p=>{const op=parseFloat(p.getAttribute('opacity')||'1');if(op<.05){p.remove();return}
+  const c=((p.getAttribute('fill')||'').match(/\d+/g)||[0,0,0]).slice(0,3).map(Number);
+  if(bg&&corners.some(k=>Math.hypot(k[0]-c[0],k[1]-c[1],k[2]-c[2])<35)){p.remove();return}
+  ['stroke','stroke-width','opacity'].forEach(x=>p.removeAttribute(x));p.setAttribute('fill',hex(c));
+  const n=p.getAttribute('d').match(/-?\d*\.?\d+/g).map(Number);let l=1e9,t=1e9,r=-1e9,b=-1e9;
+  for(let i=0;i+1<n.length;i+=2){l=Math.min(l,n[i]);r=Math.max(r,n[i]);t=Math.min(t,n[i+1]);b=Math.max(b,n[i+1])}
+  items.push({p,c,l,t,r,b,i:items.length,a:area(p.getAttribute('d')),big:(r-l)*(b-t)>A*.4})});
+ root.removeAttribute('desc');
+ let groups;
+ if(group){const par=items.map((_,i)=>i),f=x=>par[x]===x?x:(par[x]=f(par[x])),m=3;
+  for(let a=0;a<items.length;a++)for(let b=a+1;b<items.length;b++){const u=items[a],v=items[b];
+   if(!u.big&&!v.big&&u.l-m<=v.r&&v.l-m<=u.r&&u.t-m<=v.b&&v.t-m<=u.b)par[f(a)]=f(b)}
+  const gs=new Map();items.forEach((it,k)=>{const r=f(k);(gs.get(r)||gs.set(r,[]).get(r)).push(it)});groups=[...gs.values()]}
+ else groups=items.map(i=>[i]);
+ groups.map(a=>({a,l:Math.min(...a.map(x=>x.l)),t:Math.min(...a.map(x=>x.t))})).sort((x,y)=>x.l-y.l||x.t-y.t).forEach(({a})=>{
+  let paths;
+  if(T>0&&a.length>1){const cl=[];[...a].sort((x,y)=>y.a-x.a).forEach(it=>{const k=cl.find(q=>Math.hypot(q.c[0]-it.c[0],q.c[1]-it.c[1],q.c[2]-it.c[2])<=T);k?k.m.push(it):cl.push({c:it.c,m:[it]})});
+   paths=cl.map(k=>{const m=k.m.sort((x,y)=>x.i-y.i),f=m[0].p;f.setAttribute('d',m.map(x=>x.p.getAttribute('d')).join(' '));f.setAttribute('fill',hex(k.c));m.slice(1).forEach(x=>x.p.remove());return{p:f,i:m[0].i}}).sort((x,y)=>x.i-y.i).map(x=>x.p)}
+  else paths=a.sort((x,y)=>x.i-y.i).map(x=>x.p);
+  if(group&&paths.length>1){const el=doc.createElementNS(NS,'g');el.id='objeto-'+(++organize.n);paths[0].before(el);paths.forEach(p=>el.appendChild(p))}});
+ doc.querySelectorAll('path').forEach((p,i)=>p.id='forma-'+(i+1));
+ return new XMLSerializer().serializeToString(root)}
+
+const fmt=n=>+(+n).toFixed(2),vbw=()=>svg.viewBox.baseVal,kk=()=>svg.getBoundingClientRect().width/(vbw().width||1);
+function size(){const U=union(),k=kk();return{w:U.w/k,h:U.h/k}}
+function showSize(){if(!S.length)return;const s=size();$('tw').value=fmt(s.w);$('th').value=fmt(s.h)}
+const toP=(el,x,y)=>new DOMPoint(x,y).matrixTransform(el.parentNode.getScreenCTM().inverse());
+function tf(el,pre,base){el.setAttribute('transform',(pre+' '+(base===undefined?(el.getAttribute('transform')||''):base)).trim())}
+function scaleAt(sx,sy,px,py,base){S.forEach(el=>{const p=toP(el,px,py);tf(el,`translate(${p.x} ${p.y}) scale(${sx} ${sy}) translate(${-p.x} ${-p.y})`,base&&base.get(el))})}
+function moveBy(dx,dy,base){S.forEach(el=>{const a=toP(el,0,0),b=toP(el,dx,dy);tf(el,`translate(${b.x-a.x} ${b.y-a.y})`,base&&base.get(el))})}
+function scaleBy(sx,sy){if(!S.length||!(sx>0)||!(sy>0))return;dirty=false;snap();const U=union();scaleAt(sx,sy,(U.l+U.r)/2,(U.t+U.b)/2);showSize();refresh();mark()}
+$('tw').onchange=()=>{const s=size(),f=+$('tw').value/s.w;if(s.w&&f>0)scaleBy(f,$('tl').checked?f:1);else showSize()};
+$('th').onchange=()=>{const s=size(),f=+$('th').value/s.h;if(s.h&&f>0)scaleBy($('tl').checked?f:1,f);else showSize()};
+$('m10').onclick=()=>scaleBy(.9,.9);$('p10').onclick=()=>scaleBy(1.1,1.1);
+$('sw').onchange=()=>{const v=+$('sw').value;if(!S.length||!(v>=0))return;snap();S.forEach(el=>{const g=!el.matches(SHAPE);shapes(el).forEach(e=>{if(g&&cs(e,'stroke')==='none')return;e.style.strokeWidth=v})});refresh();mark()};
+function del(){if(!S.length)return;dirty=false;snap();S.forEach(e=>e.remove());deselect();buildPalette();layers();refresh()}
+$('del').onclick=del;
+addEventListener('keydown',e=>{if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;if(e.key==='Delete'){e.preventDefault();del()}if(e.key==='Escape')deselect()});
+let drag=null;
+function startDrag(type,e,hx,hy){dirty=false;snap();drag={type,x:e.clientX,y:e.clientY,hx,hy,U:union(),moved:false,base:new Map(S.map(el=>[el,el.getAttribute('transform')||'']))};e.preventDefault()}
+function objTop(t){let o=null,n=t;while(n&&n!==svg){if(n.matches&&n.matches('g[id^="objeto"]'))o=n;n=n.parentNode}return o||t}
+function onDown(e){const t0=e.target.closest(SHAPE);if(!t0||e.button>0)return;const t=objTop(t0);
+ const hit=S.find(x=>x===t0||x.contains(t0)),add=e.shiftKey||e.ctrlKey||e.metaKey;
+ if(add)choose(hit||t,true);else if(!hit)choose(t);
+ if(S.length)startDrag('move',e)}
+sel.addEventListener('pointerdown',e=>{const h=e.target.closest('.h');if(h)startDrag('size',e,+h.dataset.x,+h.dataset.y)});
+addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+ if(!drag.moved&&Math.hypot(dx,dy)<3)return;drag.moved=true;
+ if(drag.type==='move')moveBy(dx,dy,drag.base);
+ else{const U=drag.U,hx=drag.hx,hy=drag.hy;let sx=hx?(U.w+hx*dx)/U.w:1,sy=hy?(U.h+hy*dy)/U.h:1;
+  if($('tl').checked){const q=hx&&hy?(Math.abs(sx-1)>Math.abs(sy-1)?sx:sy):hx?sx:sy;sx=sy=q}
+  sx=Math.max(sx,.02);sy=Math.max(sy,.02);
+  scaleAt(sx,sy,hx?(hx===1?U.l:U.r):(U.l+U.r)/2,hy?(hy===1?U.t:U.b):(U.t+U.b)/2,drag.base)}
+ mark();showSize()});
+addEventListener('pointerup',()=>{if(drag){if(drag.moved)refresh();else{stack.pop();$('undo').disabled=!stack.length}}drag=null});
+function setDoc(){const v=vbw(),w=parseFloat(svg.getAttribute('width')),h=parseFloat(svg.getAttribute('height'));
+ $('dw').value=fmt(w||v.width);$('dh').value=fmt(h||v.height)}
+const ratio=()=>{const v=vbw();return v.width&&v.height?v.width/v.height:1};
+$('dw').oninput=()=>{if($('dl').checked)$('dh').value=fmt($('dw').value/ratio())};
+$('dh').oninput=()=>{if($('dl').checked)$('dw').value=fmt($('dh').value*ratio())};
+$('da').onclick=()=>{const w=+$('dw').value,h=+$('dh').value;if(!svg||!(w>0&&h>0))return;dirty=false;snap();
+ svg.setAttribute('width',w);svg.setAttribute('height',h);refresh();status('Arquivo definido para '+fmt(w)+' × '+fmt(h)+'.')};
+$('tm').oninput=()=>$('tmv').textContent=$('tm').value;$('tp').oninput=()=>$('tpv').textContent=$('tp').value;$('tc').oninput=()=>$('tcv').textContent=$('tc').value;$('tb').oninput=()=>$('tbv').textContent=$('tb').value;
+$('trace').onclick=async()=>{if(!svg)return;status('Vetorizando…');
+ const c=svg.cloneNode(true),v=vbw(),W=1000,H=Math.max(1,Math.round(W*v.height/(v.width||1)));
+ c.removeAttribute('style');c.setAttribute('width',W);c.setAttribute('height',H);
+ if(!c.getAttribute('xmlns:xlink'))c.setAttribute('xmlns:xlink','http://www.w3.org/1999/xlink');
+ const url='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(c));
+ try{const im=new Image();await new Promise((ok,no)=>{im.onload=ok;im.onerror=no;im.src=url});
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');x.drawImage(im,0,0,W,H);
+  const d=x.getImageData(0,0,W,H),cn=[[2,2],[W-3,2],[2,H-3],[W-3,H-3]].map(([a,b])=>{const i=(b*W+a)*4;return d.data[i+3]>200?[d.data[i],d.data[i+1],d.data[i+2]]:null}).filter(Boolean);
+  const out0=ImageTracer.imagedataToSVG(d,{numberofcolors:+$('tc').value,colorsampling:2,pathomit:+$('tp').value,ltres:1,qtres:1,blurradius:+$('tb').value,blurdelta:20,viewbox:true,strokewidth:0}),out=(organize.n=0,organize(out0,cn,$('tbg').checked,$('tgr').checked,+$('tm').value));
+  stack.push(svg.outerHTML);$('undo').disabled=false;
+  if(mount(out))status(svg.querySelectorAll('path').length+' formas em '+svg.querySelectorAll('g[id^=objeto]').length+' objetos. Clique seleciona o objeto inteiro (ex.: uma letra); duplo clique seleciona só uma forma dentro dele. Ajuste Cores/Detalhe e vetorize de novo se quiser.')}
+ catch(err){status('Não foi possível vetorizar este arquivo.')}};
+$('undo').onclick=()=>{if(!stack.length)return;const t=stack.pop();dirty=false;mount(t);$('undo').disabled=!stack.length};
+$('file').onchange=e=>{readFile(e.target.files[0]);e.target.value=''};
+function readFile(f){if(!f)return;const r=new FileReader();
+ if(/^image\/(png|jpe?g|webp)/.test(f.type)){r.onload=()=>{const im=new Image();im.onload=()=>{stack=[];$('undo').disabled=true;const w=im.naturalWidth,h=im.naturalHeight;
+  mount(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${w} ${h}"><image width="${w}" height="${h}" xlink:href="${r.result}"/></svg>`,f.name)};im.src=r.result};r.readAsDataURL(f);return}
+r.onload=()=>{stack=[];$('undo').disabled=true;mount(r.result,f.name)};r.readAsText(f)}
+['dragenter','dragover'].forEach(t=>addEventListener(t,e=>{e.preventDefault();stage.classList.add('drag')}));
+addEventListener('dragleave',e=>{if(!e.relatedTarget)stage.classList.remove('drag')});
+addEventListener('drop',e=>{e.preventDefault();stage.classList.remove('drag');const dt=e.dataTransfer,f=dt&&dt.files&&dt.files[0];
+ if(f)readFile(f);else{const t=dt&&dt.getData('text');if(t&&/<svg/i.test(t)){stack=[];mount(t.trim())}}});
+addEventListener('paste',e=>{if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;const cd=e.clipboardData;if(!cd)return;
+ const f=cd.files&&cd.files[0];if(f){readFile(f);return}const t=cd.getData('text');if(t&&/<svg/i.test(t)){e.preventDefault();stack=[];mount(t.trim())}});
+stage.addEventListener('wheel',e=>{if(!(e.ctrlKey||e.metaKey)||!svg)return;e.preventDefault();const z=$('zoom');z.value=Math.max(10,Math.min(400,+z.value*(e.deltaY<0?1.1:.9)));z.oninput()},{passive:false});
+$('fit').onclick=()=>{$('zoom').value=100;$('zoom').oninput()};
+$('pastebtn').onclick=()=>{const p=$('paste');p.style.display=p.style.display==='block'?'none':'block'};
+$('load').onclick=()=>{stack=[];$('undo').disabled=true;if(mount($('pta').value.trim()))$('paste').style.display='none'};
+$('demo').onclick=()=>{stack=[];mount('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120"><rect width="200" height="120" rx="14" fill="#2f6fed"/><circle cx="60" cy="60" r="30" fill="#ffd166"/><path d="M110 85 L140 35 L170 85Z" fill="#fff" stroke="#0b1f4d" stroke-width="4" stroke-linejoin="round"/></svg>','exemplo.svg')};
+document.querySelectorAll('[data-bg]').forEach(b=>b.onclick=()=>{wrap.className=b.dataset.bg;
+ document.querySelectorAll('[data-bg]').forEach(x=>x.classList.toggle('on',x===b))});
+function applyZoom(){if(!svg)return;svg.style.width=Math.max(40,Math.round((stage.clientWidth-60)*$('zoom').value/100))+'px';mark()}
+$('zoom').oninput=()=>{$('zv').textContent=Math.round($('zoom').value)+'%';applyZoom()};
+stage.addEventListener('scroll',mark);addEventListener('resize',applyZoom);
+$('copy').onclick=()=>{$('out').select();let ok=false;try{navigator.clipboard.writeText($('out').value);ok=true}catch(_){}
+ if(!ok){try{ok=document.execCommand('copy')}catch(_){}}$('msg').textContent=ok?'Copiado!':'Use Ctrl+C no texto';setTimeout(()=>$('msg').textContent='',2500)};
+$('save').onclick=async()=>{if(!downloads){$('copy').click();return}
+ try{await downloads.save({filename:name,data:$('out').value})}catch(e){if(e&&e.code!=='declined')$('msg').textContent='Não foi possível salvar; use Copiar.'}};
+(async()=>{try{downloads=await claude.use('downloads')}catch(_){}})();
+</script></body></html>
