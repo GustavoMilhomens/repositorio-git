@@ -17,5 +17,14 @@ function search_btn(){ //* botão de pesquisa
      alert('não ah cursos no momento'); //* alerta que bão há cursos
 };
 
+// 1. Seleciona os elementos que vamos usar
+const botaoMenu = document.querySelector("#btn-menu");
+const menu = document.querySelector(".main-nav");
+
+// 2. Escuta o evento de clique no botão
+botaoMenu.addEventListener("click", function () {
+  // 3. Alterna (liga/desliga) a classe "ativo" no menu
+  menu.classList.toggle("ativo");
+});
 
 add_element();
