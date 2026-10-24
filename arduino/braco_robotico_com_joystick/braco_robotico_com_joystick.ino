@@ -51,12 +51,6 @@
   // indica se a garra está aberta ou fechada, o angulo inicial é 0
   int posicao_abrir_fechar = 0; 
 
-  bool result_btn_abrir_fechar = false;
-
-  // salva o estado anterior dos botões
-  bool anterior_dir_b = HIGH;
-  bool anterior_esq_b = HIGH;
-
 //
 
 
@@ -95,89 +89,72 @@ int direcao(int valor)
 void loop()
 {
 
- // ============ result joystick ============
+  // ============ result joystick ============
 
-  int j_dir_x = analogRead(joystick_dir_x); // esq_dir
-  int j_dir_y = analogRead(joystick_dir_y); // cim_baix
-  bool j_dir_b = digitalRead(joystick_dir_b); // garra
+    int j_dir_x = analogRead(joystick_dir_x); // esq_dir
+    int j_dir_y = analogRead(joystick_dir_y); // cim_baix
+    bool j_dir_b = digitalRead(joystick_dir_b); // reset
 
-  // int j_esq_x = analogRead(joystick_esq_x); // não usado
-  int j_esq_y = analogRead(joystick_esq_y); //frente_tras
-  // bool j_esq_b = digitalRead(joystick_esq_b); // não usado
+    int j_esq_x = analogRead(joystick_esq_x); // garra
+    int j_esq_y = analogRead(joystick_esq_y); //frente_tras
+    bool j_esq_b = digitalRead(joystick_esq_b); // reset
 
- //
+  //
 
- // ============ prints no serial ============
-  // Serial.print(" | j_dir_x: ");  Serial.print(j_dir_x);
-  // Serial.print(" | j_dir_y: "); Serial.print(j_dir_y);
-  // Serial.print(" | j_dir_b: "); Serial.print(j_dir_b);
-  // Serial.print(" | j_esq_x: "); Serial.print(j_esq_x);
-  // Serial.print(" | j_esq_y: "); Serial.print(j_esq_y);
-  // Serial.print(" | j_esq_b: "); Serial.println(j_esq_b);
-  // Serial.println(" ========= ");
-  // Serial.print(" | esq/dir: ");     Serial.print(posicao_esq_dir);
-  // Serial.print(" | cima/baixo: "); Serial.print(posicao_cima_baixo);
-  // Serial.print(" | frente/tras: "); Serial.print(posicao_frente_tras);
-  // Serial.print(" | garra: ");      Serial.println(posicao_abrir_fechar);
-  // Serial.println(" ========= ");
+  // ============ prints no serial ============
+    // Serial.print(" | j_dir_x: ");  Serial.print(j_dir_x);
+    // Serial.print(" | j_dir_y: "); Serial.print(j_dir_y);
+    // Serial.print(" | j_dir_b: "); Serial.print(j_dir_b);
+    // Serial.print(" | j_esq_x: "); Serial.print(j_esq_x);
+    // Serial.print(" | j_esq_y: "); Serial.print(j_esq_y);
+    // Serial.print(" | j_esq_b: "); Serial.println(j_esq_b);
+    // Serial.println(" ========= ");
+    // Serial.print(" | esq/dir: ");     Serial.print(posicao_esq_dir);
+    // Serial.print(" | cima/baixo: "); Serial.print(posicao_cima_baixo);
+    // Serial.print(" | frente/tras: "); Serial.print(posicao_frente_tras);
+    // Serial.print(" | garra: ");      Serial.println(posicao_abrir_fechar);
+    // Serial.println(" ========= ");
 
- //
+  //
 
- // ============ esquerda direita ============
-  posicao_esq_dir += direcao(j_dir_x) * angulo_mov;
-  posicao_esq_dir = constrain(posicao_esq_dir, 0, 180); // restringe a posição para não passar dos valores do servo 
- //
+  // ============ esquerda direita ============
+    posicao_esq_dir += direcao(j_dir_x) * angulo_mov;
+    posicao_esq_dir = constrain(posicao_esq_dir, 0, 180); // restringe a posição para não passar dos valores do servo 
+  //
 
- // ============ cima baixo ============
-  posicao_cima_baixo += direcao(j_dir_y) * angulo_mov;
-  posicao_cima_baixo = constrain(posicao_cima_baixo, 0, 180);
- //
+  // ============ cima baixo ============
+    posicao_cima_baixo += direcao(j_dir_y) * angulo_mov;
+    posicao_cima_baixo = constrain(posicao_cima_baixo, 0, 180);
+  //
 
- // ============ frente tras ============
-  posicao_frente_tras += direcao(j_esq_y) * angulo_mov;
-  posicao_frente_tras = constrain(posicao_frente_tras, 0, 180);
- //
+  // ============ frente tras ============
+    posicao_frente_tras += direcao(j_esq_y) * angulo_mov;
+    posicao_frente_tras = constrain(posicao_frente_tras, 0, 180);
+  //
 
- // ============ abrir e fechar ============
-  if (j_dir_b == LOW && anterior_dir_b == HIGH ) {
-    result_btn_abrir_fechar = !result_btn_abrir_fechar;
-  }
-  anterior_dir_b = j_dir_b;
+  // ============ abrir e fechar ============
+    posicao_abrir_fechar += direcao(j_esq_x) * angulo_mov;
+    posicao_abrir_fechar = constrain(posicao_abrir_fechar, 0, 180);
 
-  if (result_btn_abrir_fechar) {
-    posicao_abrir_fechar = 180;
-    delay(10);
-  }
-  else {
-    posicao_abrir_fechar = 0;
-    delay(10);
-  }
- //
+  //
 
- // ============ servos motores ============
-  servo_esq_dir.write(posicao_esq_dir);
-  servo_cima_baixo.write(posicao_cima_baixo);
-  servo_frente_tras.write(posicao_frente_tras);
-  servo_abrir_fechar.write(posicao_abrir_fechar);
- //
+  // ============ reset ============
+    if (j_dir_b == HIGH && j_esq_b == HIGH ) {
+      posicao_esq_dir = 55;
+      posicao_cima_baixo = 80;
+      posicao_frente_tras = 100;
+      posicao_abrir_fechar = 180;
+    }
+  //
 
-delay(50);
+  // ============ servos motores ============
+    servo_esq_dir.write(posicao_esq_dir);
+    servo_cima_baixo.write(posicao_cima_baixo);
+    servo_frente_tras.write(posicao_frente_tras);
+    servo_abrir_fechar.write(posicao_abrir_fechar);
+  //
 
-
-
-
-
-
-
-
- // ============ reset posição inicial (botão joystick esq) ============
-  // if (esq_b == LOW && anterior_esq_b == HIGH) {
-  //   posicao_esq_dir = 55;
-  //   posicao_cima_baixo = 80;
-  //   posicao_frente_tras = 100;
-  // }
-  // anterior_esq_b = esq_b;
- //
+  delay(68);
 
 }
 
