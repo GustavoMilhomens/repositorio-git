@@ -162,7 +162,7 @@ header{
     white-space: nowrap;
 }
 
-/** ============== menu hamburguer ==============  */
+/** ============== menu_hamburguer ==============  */
 .hamburguer{
     display: none;
     font-size: 24px;
