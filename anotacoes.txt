@@ -1,5 +1,5 @@
   /* para asessar as fonts https://fonts.google.com/ */
 
-git config --global user.name "Seu Nome"
-git config --global user.email "seu-email@exemplo.com"
+git config --global user.name " "
+git config --global user.email " "
 
